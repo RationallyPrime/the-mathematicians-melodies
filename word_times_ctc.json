@@ -1,0 +1,859 @@
+[
+ {
+  "start": 12.34,
+  "end": 16.96,
+  "text": "Hann Abra er gulur. Finnst heimurinn helst dulur,",
+  "words": [
+   {
+    "word": "Hann",
+    "start": 12.64,
+    "end": 12.98
+   },
+   {
+    "word": "Abra",
+    "start": 13.12,
+    "end": 13.9
+   },
+   {
+    "word": "er",
+    "start": 14.64,
+    "end": 14.74
+   },
+   {
+    "word": "gulur.",
+    "start": 14.94,
+    "end": 15.32
+   },
+   {
+    "word": "Finnst",
+    "start": 15.54,
+    "end": 15.66
+   },
+   {
+    "word": "heimurinn",
+    "start": 15.86,
+    "end": 16.22
+   },
+   {
+    "word": "helst",
+    "start": 16.44,
+    "end": 16.66
+   },
+   {
+    "word": "dulur,",
+    "start": 16.74,
+    "end": 17.14
+   }
+  ]
+ },
+ {
+  "start": 17.0,
+  "end": 20.66,
+  "text": "vill vita um hvað þetta snýst.",
+  "words": [
+   {
+    "word": "vill",
+    "start": 16.82,
+    "end": 16.98
+   },
+   {
+    "word": "vita",
+    "start": 17.72,
+    "end": 17.92
+   },
+   {
+    "word": "um",
+    "start": 17.96,
+    "end": 18.2
+   },
+   {
+    "word": "hvað",
+    "start": 18.5,
+    "end": 18.82
+   },
+   {
+    "word": "þetta",
+    "start": 18.94,
+    "end": 19.44
+   },
+   {
+    "word": "snýst.",
+    "start": 19.62,
+    "end": 20.84
+   }
+  ]
+ },
+ {
+  "start": 21.34,
+  "end": 25.8,
+  "text": "Því þó hann sé skjótur, er enginn nógu fljótur",
+  "words": [
+   {
+    "word": "Því",
+    "start": 21.16,
+    "end": 21.46
+   },
+   {
+    "word": "þó",
+    "start": 21.5,
+    "end": 21.56
+   },
+   {
+    "word": "hann",
+    "start": 21.6,
+    "end": 21.96
+   },
+   {
+    "word": "sé",
+    "start": 22.04,
+    "end": 22.1
+   },
+   {
+    "word": "skjótur,",
+    "start": 22.96,
+    "end": 23.8
+   },
+   {
+    "word": "er",
+    "start": 24.14,
+    "end": 24.28
+   },
+   {
+    "word": "enginn",
+    "start": 24.36,
+    "end": 24.6
+   },
+   {
+    "word": "nógu",
+    "start": 25.16,
+    "end": 25.24
+   },
+   {
+    "word": "fljótur",
+    "start": 25.36,
+    "end": 25.98
+   }
+  ]
+ },
+ {
+  "start": 25.8,
+  "end": 29.22,
+  "text": "að svara honum það er nú víst.",
+  "words": [
+   {
+    "word": "að",
+    "start": 25.84,
+    "end": 25.96
+   },
+   {
+    "word": "svara",
+    "start": 26.02,
+    "end": 26.32
+   },
+   {
+    "word": "honum",
+    "start": 26.44,
+    "end": 27.22
+   },
+   {
+    "word": "það",
+    "start": 27.54,
+    "end": 27.96
+   },
+   {
+    "word": "er",
+    "start": 28.04,
+    "end": 28.28
+   },
+   {
+    "word": "nú",
+    "start": 28.52,
+    "end": 28.62
+   },
+   {
+    "word": "víst.",
+    "start": 28.74,
+    "end": 29.4
+   }
+  ]
+ },
+ {
+  "start": 30.0,
+  "end": 34.7,
+  "text": "Því Abra vill vita hvað veldur nú hita?",
+  "words": [
+   {
+    "word": "Því",
+    "start": 31.3,
+    "end": 31.44
+   },
+   {
+    "word": "Abra",
+    "start": 32.08,
+    "end": 32.6
+   },
+   {
+    "word": "vill",
+    "start": 32.7,
+    "end": 32.78
+   },
+   {
+    "word": "vita",
+    "start": 32.82,
+    "end": 33.1
+   },
+   {
+    "word": "hvað",
+    "start": 33.24,
+    "end": 33.46
+   },
+   {
+    "word": "veldur",
+    "start": 33.54,
+    "end": 34.1
+   },
+   {
+    "word": "nú",
+    "start": 34.2,
+    "end": 34.32
+   },
+   {
+    "word": "hita?",
+    "start": 34.56,
+    "end": 34.88
+   }
+  ]
+ },
+ {
+  "start": 34.8,
+  "end": 38.22,
+  "text": "Bara sameindir að renna",
+  "words": [
+   {
+    "word": "Bara",
+    "start": 34.62,
+    "end": 34.78
+   },
+   {
+    "word": "sameindir",
+    "start": 35.66,
+    "end": 36.36
+   },
+   {
+    "word": "að",
+    "start": 36.48,
+    "end": 36.53
+   },
+   {
+    "word": "renna",
+    "start": 37.3,
+    "end": 38.42
+   }
+  ]
+ },
+ {
+  "start": 38.6,
+  "end": 44.86,
+  "text": "Býr sólin til geisla? Hvernig má þá beisla?",
+  "words": [
+   {
+    "word": "Býr",
+    "start": 38.42,
+    "end": 38.56
+   },
+   {
+    "word": "sólin",
+    "start": 39.42,
+    "end": 39.58
+   },
+   {
+    "word": "til",
+    "start": 39.64,
+    "end": 39.74
+   },
+   {
+    "word": "geisla?",
+    "start": 39.86,
+    "end": 40.32
+   },
+   {
+    "word": "Hvernig",
+    "start": 41.26,
+    "end": 43.28
+   },
+   {
+    "word": "má",
+    "start": 43.66,
+    "end": 43.76
+   },
+   {
+    "word": "þá",
+    "start": 44.02,
+    "end": 44.12
+   },
+   {
+    "word": "beisla?",
+    "start": 44.44,
+    "end": 45.04
+   }
+  ]
+ },
+ {
+  "start": 45.78,
+  "end": 49.08,
+  "text": "Ef herskipin þurfa að brenna",
+  "words": [
+   {
+    "word": "Ef",
+    "start": 46.12,
+    "end": 46.17
+   },
+   {
+    "word": "herskipin",
+    "start": 46.42,
+    "end": 46.84
+   },
+   {
+    "word": "þurfa",
+    "start": 46.94,
+    "end": 47.44
+   },
+   {
+    "word": "að",
+    "start": 48.18,
+    "end": 48.4
+   },
+   {
+    "word": "brenna",
+    "start": 48.48,
+    "end": 49.26
+   }
+  ]
+ },
+ {
+  "start": 62.04,
+  "end": 66.98,
+  "text": "Alla sem Abra hittir hann telur ekki kvittir",
+  "words": [
+   {
+    "word": "Alla",
+    "start": 62.92,
+    "end": 63.0
+   },
+   {
+    "word": "sem",
+    "start": 63.18,
+    "end": 63.38
+   },
+   {
+    "word": "Abra",
+    "start": 63.48,
+    "end": 63.88
+   },
+   {
+    "word": "hittir",
+    "start": 64.16,
+    "end": 64.48
+   },
+   {
+    "word": "hann",
+    "start": 64.54,
+    "end": 64.74
+   },
+   {
+    "word": "telur",
+    "start": 64.88,
+    "end": 65.6
+   },
+   {
+    "word": "ekki",
+    "start": 65.72,
+    "end": 66.44
+   },
+   {
+    "word": "kvittir",
+    "start": 66.68,
+    "end": 67.18
+   }
+  ]
+ },
+ {
+  "start": 67.2,
+  "end": 70.46,
+  "text": "fyrr en hann hefur eitthvað nýtt lært.",
+  "words": [
+   {
+    "word": "fyrr",
+    "start": 67.42,
+    "end": 67.52
+   },
+   {
+    "word": "en",
+    "start": 67.7,
+    "end": 67.78
+   },
+   {
+    "word": "hann",
+    "start": 67.84,
+    "end": 68.14
+   },
+   {
+    "word": "hefur",
+    "start": 68.8,
+    "end": 69.16
+   },
+   {
+    "word": "eitthvað",
+    "start": 69.2,
+    "end": 69.42
+   },
+   {
+    "word": "nýtt",
+    "start": 69.5,
+    "end": 69.66
+   },
+   {
+    "word": "lært.",
+    "start": 69.74,
+    "end": 70.64
+   }
+  ]
+ },
+ {
+  "start": 71.48,
+  "end": 76.04,
+  "text": "En hvers vegna vetni? spyr Abra með glettni.",
+  "words": [
+   {
+    "word": "En",
+    "start": 71.54,
+    "end": 71.59
+   },
+   {
+    "word": "hvers",
+    "start": 71.64,
+    "end": 72.32
+   },
+   {
+    "word": "vegna",
+    "start": 73.24,
+    "end": 73.52
+   },
+   {
+    "word": "vetni?",
+    "start": 73.7,
+    "end": 73.9
+   },
+   {
+    "word": "spyr",
+    "start": 74.16,
+    "end": 74.42
+   },
+   {
+    "word": "Abra",
+    "start": 75.04,
+    "end": 75.4
+   },
+   {
+    "word": "með",
+    "start": 75.48,
+    "end": 75.64
+   },
+   {
+    "word": "glettni.",
+    "start": 75.88,
+    "end": 76.22
+   }
+  ]
+ },
+ {
+  "start": 76.2,
+  "end": 79.16,
+  "text": "Er það svo að hvarfið sé fært?",
+  "words": [
+   {
+    "word": "Er",
+    "start": 76.1,
+    "end": 76.18
+   },
+   {
+    "word": "það",
+    "start": 76.42,
+    "end": 76.6
+   },
+   {
+    "word": "svo",
+    "start": 77.52,
+    "end": 77.64
+   },
+   {
+    "word": "að",
+    "start": 78.0,
+    "end": 78.12
+   },
+   {
+    "word": "hvarfið",
+    "start": 78.5,
+    "end": 78.86
+   },
+   {
+    "word": "sé",
+    "start": 78.96,
+    "end": 79.06
+   },
+   {
+    "word": "fært?",
+    "start": 79.1,
+    "end": 79.34
+   }
+  ]
+ },
+ {
+  "start": 80.4,
+  "end": 85.08,
+  "text": "En er til frjáls vilji, eða hann Spinoza mylji?",
+  "words": [
+   {
+    "word": "En",
+    "start": 81.74,
+    "end": 81.9
+   },
+   {
+    "word": "er",
+    "start": 82.12,
+    "end": 82.4
+   },
+   {
+    "word": "til",
+    "start": 83.34,
+    "end": 83.42
+   },
+   {
+    "word": "frjáls",
+    "start": 83.46,
+    "end": 83.66
+   },
+   {
+    "word": "vilji,",
+    "start": 83.74,
+    "end": 84.02
+   },
+   {
+    "word": "eða",
+    "start": 84.12,
+    "end": 84.26
+   },
+   {
+    "word": "hann",
+    "start": 84.3,
+    "end": 84.46
+   },
+   {
+    "word": "Spinoza",
+    "start": 84.5,
+    "end": 84.7
+   },
+   {
+    "word": "mylji?",
+    "start": 84.96,
+    "end": 85.26
+   }
+  ]
+ },
+ {
+  "start": 85.08,
+  "end": 88.32,
+  "text": "Hvernig getum við ákveðið það?",
+  "words": [
+   {
+    "word": "Hvernig",
+    "start": 85.16,
+    "end": 85.74
+   },
+   {
+    "word": "getum",
+    "start": 85.96,
+    "end": 86.6
+   },
+   {
+    "word": "við",
+    "start": 86.66,
+    "end": 86.82
+   },
+   {
+    "word": "ákveðið",
+    "start": 86.92,
+    "end": 87.64
+   },
+   {
+    "word": "það?",
+    "start": 87.98,
+    "end": 88.5
+   }
+  ]
+ },
+ {
+  "start": 88.32,
+  "end": 92.12,
+  "text": "Er það skammtasviðsfræði",
+  "words": [
+   {
+    "word": "Er",
+    "start": 88.16,
+    "end": 88.42
+   },
+   {
+    "word": "það",
+    "start": 89.74,
+    "end": 90.2
+   },
+   {
+    "word": "skammtasviðsfræði",
+    "start": 90.28,
+    "end": 92.32
+   }
+  ]
+ },
+ {
+  "start": 92.34,
+  "end": 95.48,
+  "text": "og afstæðið bæði",
+  "words": [
+   {
+    "word": "og",
+    "start": 93.46,
+    "end": 93.6
+   },
+   {
+    "word": "afstæðið",
+    "start": 93.68,
+    "end": 94.52
+   },
+   {
+    "word": "bæði",
+    "start": 94.74,
+    "end": 95.66
+   }
+  ]
+ },
+ {
+  "start": 95.48,
+  "end": 99.52,
+  "text": "eða þarf bara að fara í bað? (Eureka!)",
+  "words": [
+   {
+    "word": "eða",
+    "start": 95.3,
+    "end": 95.38
+   },
+   {
+    "word": "þarf",
+    "start": 96.06,
+    "end": 96.5
+   },
+   {
+    "word": "bara",
+    "start": 96.6,
+    "end": 96.98
+   },
+   {
+    "word": "að",
+    "start": 97.14,
+    "end": 97.19
+   },
+   {
+    "word": "fara",
+    "start": 97.28,
+    "end": 97.48
+   },
+   {
+    "word": "í",
+    "start": 97.74,
+    "end": 97.79
+   },
+   {
+    "word": "bað?",
+    "start": 98.0,
+    "end": 98.42
+   },
+   {
+    "word": "(Eureka!)",
+    "start": 98.48,
+    "end": 99.7
+   }
+  ]
+ },
+ {
+  "start": 130.48,
+  "end": 135.32,
+  "text": "Það hlakkar í Abra ef svörin eru kadabra",
+  "words": [
+   {
+    "word": "Það",
+    "start": 131.1,
+    "end": 131.36
+   },
+   {
+    "word": "hlakkar",
+    "start": 131.54,
+    "end": 132.18
+   },
+   {
+    "word": "í",
+    "start": 132.22,
+    "end": 132.27
+   },
+   {
+    "word": "Abra",
+    "start": 132.26,
+    "end": 132.42
+   },
+   {
+    "word": "ef",
+    "start": 132.46,
+    "end": 132.51
+   },
+   {
+    "word": "svörin",
+    "start": 132.6,
+    "end": 133.22
+   },
+   {
+    "word": "eru",
+    "start": 133.7,
+    "end": 133.92
+   },
+   {
+    "word": "kadabra",
+    "start": 134.58,
+    "end": 135.5
+   }
+  ]
+ },
+ {
+  "start": 135.5,
+  "end": 138.64,
+  "text": "og hann segir þig út úr kú.",
+  "words": [
+   {
+    "word": "og",
+    "start": 135.94,
+    "end": 136.06
+   },
+   {
+    "word": "hann",
+    "start": 137.12,
+    "end": 137.3
+   },
+   {
+    "word": "segir",
+    "start": 137.42,
+    "end": 137.72
+   },
+   {
+    "word": "þig",
+    "start": 137.86,
+    "end": 138.0
+   },
+   {
+    "word": "út",
+    "start": 138.06,
+    "end": 138.2
+   },
+   {
+    "word": "úr",
+    "start": 138.3,
+    "end": 138.35
+   },
+   {
+    "word": "kú.",
+    "start": 138.64,
+    "end": 138.82
+   }
+  ]
+ },
+ {
+  "start": 139.1,
+  "end": 145.98,
+  "text": "Svo best er að svara, á stúfana skulum fara",
+  "words": [
+   {
+    "word": "Svo",
+    "start": 140.06,
+    "end": 140.18
+   },
+   {
+    "word": "best",
+    "start": 140.86,
+    "end": 141.22
+   },
+   {
+    "word": "er",
+    "start": 141.32,
+    "end": 141.44
+   },
+   {
+    "word": "að",
+    "start": 141.66,
+    "end": 142.0
+   },
+   {
+    "word": "svara,",
+    "start": 143.42,
+    "end": 143.86
+   },
+   {
+    "word": "á",
+    "start": 143.96,
+    "end": 144.01
+   },
+   {
+    "word": "stúfana",
+    "start": 144.16,
+    "end": 144.88
+   },
+   {
+    "word": "skulum",
+    "start": 144.94,
+    "end": 145.08
+   },
+   {
+    "word": "fara",
+    "start": 145.36,
+    "end": 146.16
+   }
+  ]
+ },
+ {
+  "start": 146.06,
+  "end": 149.74,
+  "text": "og komast að því nú!",
+  "words": [
+   {
+    "word": "og",
+    "start": 146.2,
+    "end": 146.28
+   },
+   {
+    "word": "komast",
+    "start": 146.78,
+    "end": 147.36
+   },
+   {
+    "word": "að",
+    "start": 147.66,
+    "end": 147.94
+   },
+   {
+    "word": "því",
+    "start": 148.32,
+    "end": 148.44
+   },
+   {
+    "word": "nú!",
+    "start": 149.74,
+    "end": 149.92
+   }
+  ]
+ }
+]

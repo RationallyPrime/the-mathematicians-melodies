@@ -1,0 +1,35 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1280
+PlayResY: 720
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Karaoke,DejaVu Sans,38,&H0000E5FF,&H00FFFFFF,&H00101010,&H96000000,-1,0,0,0,100,100,0,0,1,3,1,2,60,60,46,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+
+Dialogue: 0,0:00:12.34,0:00:16.96,Karaoke,,0,0,0,,{\kf44}Hann {\kf44}Abra {\kf22}er {\kf66}gulur. {\kf66}Finnst {\kf99}heimurinn {\kf55}helst {\kf66}dulur,
+Dialogue: 0,0:00:17.00,0:00:20.66,Karaoke,,0,0,0,,{\kf59}vill {\kf59}vita {\kf29}um {\kf59}hvað {\kf73}þetta {\kf87}snýst.
+Dialogue: 0,0:00:21.34,0:00:25.80,Karaoke,,0,0,0,,{\kf35}Því {\kf23}þó {\kf47}hann {\kf23}sé {\kf94}skjótur, {\kf23}er {\kf70}enginn {\kf47}nógu {\kf84}fljótur
+Dialogue: 0,0:00:25.80,0:00:29.22,Karaoke,,0,0,0,,{\kf28}að {\kf71}svara {\kf71}honum {\kf43}það {\kf28}er {\kf28}nú {\kf73}víst.
+Dialogue: 0,0:00:30.00,0:00:34.70,Karaoke,,0,0,0,,{\kf44}Því {\kf59}Abra {\kf59}vill {\kf59}vita {\kf59}hvað {\kf88}veldur {\kf29}nú {\kf73}hita?
+Dialogue: 0,0:00:34.80,0:00:38.22,Karaoke,,0,0,0,,{\kf68}Bara {\kf154}sameindir {\kf34}að {\kf86}renna
+Dialogue: 0,0:00:38.60,0:00:44.86,Karaoke,,0,0,0,,{\kf52}Býr {\kf87}sólin {\kf52}til {\kf122}geisla? {\kf122}Hvernig {\kf35}má {\kf35}þá {\kf121}beisla?
+Dialogue: 0,0:00:45.78,0:00:49.08,Karaoke,,0,0,0,,{\kf28}Ef {\kf124}herskipin {\kf69}þurfa {\kf28}að {\kf81}brenna
+Dialogue: 0,0:01:02.04,0:01:06.98,Karaoke,,0,0,0,,{\kf53}Alla {\kf40}sem {\kf53}Abra {\kf80}hittir {\kf53}hann {\kf67}telur {\kf53}ekki {\kf95}kvittir
+Dialogue: 0,0:01:07.20,0:01:10.46,Karaoke,,0,0,0,,{\kf41}fyrr {\kf20}en {\kf41}hann {\kf51}hefur {\kf82}eitthvað {\kf41}nýtt {\kf50}lært.
+Dialogue: 0,0:01:11.48,0:01:16.04,Karaoke,,0,0,0,,{\kf25}En {\kf62}hvers {\kf62}vegna {\kf74}vetni? {\kf49}spyr {\kf49}Abra {\kf37}með {\kf98}glettni.
+Dialogue: 0,0:01:16.20,0:01:19.16,Karaoke,,0,0,0,,{\kf25}Er {\kf37}það {\kf37}svo {\kf25}að {\kf86}hvarfið {\kf25}sé {\kf61}fært?
+Dialogue: 0,0:01:20.40,0:01:25.08,Karaoke,,0,0,0,,{\kf24}En {\kf24}er {\kf36}til {\kf72}frjáls {\kf72}vilji, {\kf36}eða {\kf48}hann {\kf84}Spinoza {\kf72}mylji?
+Dialogue: 0,0:01:25.08,0:01:28.32,Karaoke,,0,0,0,,{\kf87}Hvernig {\kf62}getum {\kf37}við {\kf87}ákveðið {\kf51}það?
+Dialogue: 0,0:01:28.32,0:01:32.12,Karaoke,,0,0,0,,{\kf35}Er {\kf52}það {\kf293}skammtasviðsfræði
+Dialogue: 0,0:01:32.34,0:01:35.48,Karaoke,,0,0,0,,{\kf45}og {\kf179}afstæðið {\kf90}bæði
+Dialogue: 0,0:01:35.48,0:01:39.52,Karaoke,,0,0,0,,{\kf39}eða {\kf52}þarf {\kf52}bara {\kf26}að {\kf52}fara {\kf13}í {\kf52}bað? {\kf118}(Eureka!)
+Dialogue: 0,0:02:10.48,0:02:15.32,Karaoke,,0,0,0,,{\kf44}Það {\kf103}hlakkar {\kf15}í {\kf59}Abra {\kf29}ef {\kf88}svörin {\kf44}eru {\kf102}kadabra
+Dialogue: 0,0:02:15.50,0:02:18.64,Karaoke,,0,0,0,,{\kf30}og {\kf60}hann {\kf75}segir {\kf45}þig {\kf30}út {\kf30}úr {\kf44}kú.
+Dialogue: 0,0:02:19.10,0:02:25.98,Karaoke,,0,0,0,,{\kf59}Svo {\kf79}best {\kf39}er {\kf39}að {\kf118}svara, {\kf20}á {\kf138}stúfana {\kf118}skulum {\kf78}fara
+Dialogue: 0,0:02:26.06,0:02:29.74,Karaoke,,0,0,0,,{\kf46}og {\kf138}komast {\kf46}að {\kf69}því {\kf69}nú!

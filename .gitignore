@@ -1,0 +1,28 @@
+# --- Python env & caches (5.4G; recreate with uv, see README) ---
+.venv-fx/
+__pycache__/
+*.pyc
+
+# --- Rendered video outputs (build artifacts; regenerate via build_*.py) ---
+Afhverju-Abra_full.mp4
+Afhverju-Abra_novocals.mp4
+Afhverju-Abra_lyrics.mp4
+Afhverju-Abra_karaoke.mp4
+Afhverju-Abra_fullblast.mp4
+
+# --- Generated frames & contact sheets (regenerate via verify scripts) ---
+screens/
+montages/
+
+# --- Scratch / verification temp dirs & stray frames ---
+_*/
+*_check*.png
+concat_list.txt
+
+# --- Media assets live on the Hugging Face dataset, not in git ---
+# Source clips and audio stems are published as a HF dataset (see README).
+Afhverju-Abra_202606021704_*.mp4
+*.wav
+
+# --- Session state (not part of the project) ---
+.remember/
