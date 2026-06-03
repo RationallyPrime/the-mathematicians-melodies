@@ -6,6 +6,7 @@ Each tile: top caption = EXPECTED line (n + text); the bottom of the frame
 already carries the burned-in karaoke lyric; the image is the actual clip
 content. All three should agree.
 """
+
 import subprocess
 from pathlib import Path
 
@@ -23,21 +24,60 @@ for raw in LABELS.read_text(encoding="utf-8").splitlines():
         lines.append((float(s), float(e), t))
 
 # instrumental gap probe points (no lyric should be on screen)
-gaps = [("intro", 5.0), ("intro", 9.5), ("break1", 55.0), ("break2", 107.0),
-        ("break2", 117.0), ("break2", 125.0), ("outro", 155.0), ("outro", 164.0)]
+gaps = [
+    ("intro", 5.0),
+    ("intro", 9.5),
+    ("break1", 55.0),
+    ("break2", 107.0),
+    ("break2", 117.0),
+    ("break2", 125.0),
+    ("outro", 155.0),
+    ("outro", 164.0),
+]
 
 
 def grab(t, dst):
-    subprocess.run(["ffmpeg", "-y", "-hide_banner", "-loglevel", "error",
-                    "-ss", f"{t}", "-i", str(VIDEO), "-frames:v", "1", str(dst)],
-                   check=True)
+    subprocess.run(
+        [
+            "ffmpeg",
+            "-y",
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-ss",
+            f"{t}",
+            "-i",
+            str(VIDEO),
+            "-frames:v",
+            "1",
+            str(dst),
+        ],
+        check=True,
+    )
 
 
 def caption(src, text, color):
-    subprocess.run(["convert", str(src), "-gravity", "North",
-                    "-font", FONT, "-pointsize", "30",
-                    "-fill", color, "-undercolor", "#000000cc",
-                    "-annotate", "+0+4", text, str(src)], check=True)
+    subprocess.run(
+        [
+            "convert",
+            str(src),
+            "-gravity",
+            "North",
+            "-font",
+            FONT,
+            "-pointsize",
+            "30",
+            "-fill",
+            color,
+            "-undercolor",
+            "#000000cc",
+            "-annotate",
+            "+0+4",
+            text,
+            str(src),
+        ],
+        check=True,
+    )
 
 
 line_tiles = []
@@ -55,10 +95,32 @@ for name, t in gaps:
     caption(p, f"{name} @{t:0.0f}s  (should be NO lyric)", "#66FFFF")
     gap_tiles.append(str(p))
 
-subprocess.run(["montage", *line_tiles, "-tile", "3x", "-geometry",
-                "560x315+4+4", "-background", "black", str(OUTDIR / "sheet_lines.png")],
-               check=True)
-subprocess.run(["montage", *gap_tiles, "-tile", "4x", "-geometry",
-                "480x270+4+4", "-background", "black", str(OUTDIR / "sheet_gaps.png")],
-               check=True)
+subprocess.run(
+    [
+        "montage",
+        *line_tiles,
+        "-tile",
+        "3x",
+        "-geometry",
+        "560x315+4+4",
+        "-background",
+        "black",
+        str(OUTDIR / "sheet_lines.png"),
+    ],
+    check=True,
+)
+subprocess.run(
+    [
+        "montage",
+        *gap_tiles,
+        "-tile",
+        "4x",
+        "-geometry",
+        "480x270+4+4",
+        "-background",
+        "black",
+        str(OUTDIR / "sheet_gaps.png"),
+    ],
+    check=True,
+)
 print("wrote", OUTDIR / "sheet_lines.png", "and", OUTDIR / "sheet_gaps.png")

@@ -6,7 +6,9 @@
   exactly on the (beat-snapped) cut boundaries -> total stays 167.69s, and the
   karaoke (burned at absolute audio times) stays perfectly synced.
 """
-import json, subprocess
+
+import json
+import subprocess
 from pathlib import Path
 
 ROOT = Path("/home/rationallyprime/Videos/Afhverju-Abra")
@@ -19,12 +21,28 @@ D = 0.40  # crossfade duration
 # (clip, source_start, slot_len)  -- slot_len sums to 167.69; every non-last
 # clip has ss+len <= 9.6 (or 3.6 for clip2) so it can extend by D.
 EDIT = [
-    (6, 0.00, 6.00), (1, 0.00, 9.60), (2, 0.00, 3.60), (8, 0.00, 9.60),
-    (3, 4.60, 5.00), (10, 4.60, 4.40), (5, 0.00, 9.60), (16, 1.80, 7.80),
-    (20, 0.00, 6.60), (13, 0.00, 9.44), (11, 0.00, 8.92), (9, 2.00, 7.60),
-    (12, 0.00, 7.16), (7, 1.40, 8.20), (14, 0.00, 9.60), (17, 1.20, 8.40),
-    (15, 0.00, 8.19), (21, 4.00, 5.60), (18, 2.00, 7.60), (19, 1.60, 8.00),
-    (1, 0.00, 8.50), (4, 1.40, 8.28),
+    (6, 0.00, 6.00),
+    (1, 0.00, 9.60),
+    (2, 0.00, 3.60),
+    (8, 0.00, 9.60),
+    (3, 4.60, 5.00),
+    (10, 4.60, 4.40),
+    (5, 0.00, 9.60),
+    (16, 1.80, 7.80),
+    (20, 0.00, 6.60),
+    (13, 0.00, 9.44),
+    (11, 0.00, 8.92),
+    (9, 2.00, 7.60),
+    (12, 0.00, 7.16),
+    (7, 1.40, 8.20),
+    (14, 0.00, 9.60),
+    (17, 1.20, 8.40),
+    (15, 0.00, 8.19),
+    (21, 4.00, 5.60),
+    (18, 2.00, 7.60),
+    (19, 1.60, 8.00),
+    (1, 0.00, 8.50),
+    (4, 1.40, 8.28),
 ]
 N = len(EDIT)
 beats = json.loads((ROOT / "beats.json").read_text())["beats"]
@@ -58,8 +76,7 @@ inputs += ["-i", AUDIO]
 
 fc = ""
 for i in range(N):
-    fc += (f"[{i}:v]scale=1280:720,setsar=1,fps=24,format=yuv420p,"
-           f"setpts=PTS-STARTPTS[v{i}];")
+    fc += f"[{i}:v]scale=1280:720,setsar=1,fps=24,format=yuv420p,setpts=PTS-STARTPTS[v{i}];"
 prev, merged = "v0", S[0]
 for i in range(1, N):
     off = merged - D
@@ -69,11 +86,35 @@ for i in range(1, N):
     prev = out
 fc += f"[vcat]ass={ASS}[v]"
 
-cmd = ["ffmpeg", "-y", *inputs, "-filter_complex", fc,
-       "-map", "[v]", "-map", f"{N}:a",
-       "-c:v", "libx264", "-preset", "medium", "-crf", "18",
-       "-pix_fmt", "yuv420p", "-r", "24", "-c:a", "aac", "-b:a", "192k",
-       "-shortest", "-movflags", "+faststart", str(OUT)]
+cmd = [
+    "ffmpeg",
+    "-y",
+    *inputs,
+    "-filter_complex",
+    fc,
+    "-map",
+    "[v]",
+    "-map",
+    f"{N}:a",
+    "-c:v",
+    "libx264",
+    "-preset",
+    "medium",
+    "-crf",
+    "18",
+    "-pix_fmt",
+    "yuv420p",
+    "-r",
+    "24",
+    "-c:a",
+    "aac",
+    "-b:a",
+    "192k",
+    "-shortest",
+    "-movflags",
+    "+faststart",
+    str(OUT),
+]
 
 print(f"merged video len ~{merged:.2f}s (trimmed to audio via -shortest)")
 print("snapped boundaries:", [f"{t:.1f}" for t in T])

@@ -1,4 +1,5 @@
-# --- Python env & caches (5.4G; recreate with uv, see README) ---
+# --- Python env & caches (recreate with `just setup` / `uv sync`) ---
+.venv/
 .venv-fx/
 __pycache__/
 *.pyc

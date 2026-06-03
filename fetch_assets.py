@@ -12,6 +12,7 @@ Places:
   audio/*.wav  -> ~/Downloads/separated/htdemucs/Aravísur/  (hardcoded in scripts)
   everything   -> ./assets/      (full snapshot, incl. renders/)
 """
+
 import os
 import shutil
 from pathlib import Path
@@ -24,8 +25,7 @@ AUDIO_DEST = Path(os.path.expanduser("~/Downloads/separated/htdemucs/Aravísur")
 
 
 def main() -> None:
-    snap = Path(snapshot_download(REPO, repo_type="dataset",
-                                  local_dir=str(ROOT / "assets")))
+    snap = Path(snapshot_download(REPO, repo_type="dataset", local_dir=str(ROOT / "assets")))
     for p in (snap / "clips").glob("*.mp4"):
         shutil.copy2(p, ROOT / p.name)
     AUDIO_DEST.mkdir(parents=True, exist_ok=True)

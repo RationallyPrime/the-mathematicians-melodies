@@ -1,83 +1,104 @@
-# Afhverju Abra — karaoke music video
+# The Mathematician's Melodies — *Afhverju Abra*
 
-A lyric / karaoke music video for the Icelandic kids' science song **Aravísur**
-("Afhverju Abra"), assembled from 21 AI-generated clips of *Abra*, a curious
-yellow cat. Clips are re-ordered to match the lyrics, the original vocals are
-removed (htdemucs) for a karaoke backing track, and forced-aligned per-word
-lyrics are burned in with animated, beat-synced styling.
+A karaoke music video for the Icelandic kids' science song **Aravísur**
+("Afhverju Abra" — *Why, Abra?*), built from 21 AI-generated clips of **Abra**,
+a curious yellow cat who wants to know what causes heat, whether the sun makes
+rays, and if Spinoza crushed free will.
 
-## Layout
+The pipeline re-orders the clips to match the lyrics, strips the vocals for a
+karaoke backing track, **forced-aligns** the lyrics to the singing for
+syllable-accurate timing, and burns in **animated, verse-themed karaoke** over
+**beat-synced crossfades**.
 
-Media assets (clips, audio, rendered videos) are **not in git** — they live in a
-companion **Hugging Face dataset** (see *Assets* below). This repo is code only.
+> **Status:** v0.1.0 — the full-blast cut is done. 🐱🔊
+> Code: MIT · Media: private HF dataset (rights reserved) · Type checker: nope, it's a vibes release.
 
-| Path | Tracked | What |
-|---|---|---|
-| `Afhverju-Abra_202606021704_*.mp4` (1–21) | ⬇️ HF | Source clips (irreplaceable AI generations) |
-| `Abravisur_labels.txt` | ✅ | Lyrics — TSV `start⇥end⇥text`, one line per lyric phrase |
-| `align_ctc.py` | ✅ | GPU CTC forced alignment → `word_times_ctc.json` |
-| `analyze_audio.py` | ✅ | Beat/onset detection → `beats.json`; onset word-timing fallback |
-| `karaoke_ass.py` | ✅ | Animated kinetic-karaoke ASS → `Abravisur_anim.ass` |
-| `build_v3.py` | ✅ | Final render: crossfades + beat-snapped cuts + animated karaoke |
-| `build_v2.py` | ✅ | Simpler render: hard cuts, interpolated karaoke |
-| `build_lyrics_video.sh` | ✅ | First pass: plain concat + SRT subtitles |
-| `verify_align.py` | ✅ | Per-lyric-line alignment contact sheet |
-| `*.json`, `Abravisur*.ass/.srt` | ✅ | Derived alignment/lyric assets |
-| `Afhverju-Abra_{full,novocals,lyrics,karaoke,fullblast}.mp4` | ❌ | Rendered outputs (rebuild) |
-| `screens/`, `montages/` | ❌ | Generated frames / contact sheets |
-| `.venv-fx/` | ❌ | uv venv (5.4 G) |
+---
 
-### Assets (Hugging Face dataset)
-Media assets live in the **private** HF dataset
-[`RationallyPrime/Whimsy-Daisy`](https://huggingface.co/datasets/RationallyPrime/Whimsy-Daisy):
-- `clips/Afhverju-Abra_202606021704_*.mp4` — the 21 source clips
-- `audio/no_vocals.wav` — instrumental backing track (karaoke audio, 167.69 s)
-- `audio/vocals.wav` — isolated vocals (used for forced alignment)
-- `renders/Afhverju-Abra_fullblast.mp4` — the finished video
-
-Fetch them into the layout the build scripts expect:
-```sh
-hf auth login            # private dataset; or export HF_TOKEN=...
-python fetch_assets.py   # clips -> repo root, audio -> ~/Downloads/.../Aravísur/
-```
-
-## Environment
+## Quickstart
 
 ```sh
-uv venv .venv-fx --python 3.12
-uv pip install --python .venv-fx numpy scipy librosa soundfile pillow \
-    torch torchaudio --index-url https://download.pytorch.org/whl/cu124
-uv pip install --python .venv-fx ctc-forced-aligner unidecode
-```
-Needs an NVIDIA GPU for the aligner (developed on an RTX 4080). `ffmpeg` must be
-on PATH.
-
-## Build (full-blast cut)
-
-```sh
-.venv-fx/bin/python analyze_audio.py   # beats.json + onset fallback
-.venv-fx/bin/python align_ctc.py       # word_times_ctc.json (per-line CTC)
-.venv-fx/bin/python karaoke_ass.py     # Abravisur_anim.ass
-.venv-fx/bin/python build_v3.py        # -> Afhverju-Abra_fullblast.mp4
+just setup          # uv sync — creates .venv with all deps (incl. cu124 torch)
+hf auth login       # the asset dataset is private
+just fetch          # pull clips + audio from Hugging Face into place
+just build          # beats -> align -> karaoke -> render  => the finished video
 ```
 
-## How it fits together
+`just` with no args lists every task. Requires `ffmpeg`, ImageMagick (for
+`just verify`), an NVIDIA GPU for alignment, and [`uv`](https://docs.astral.sh/uv/).
 
-- **Clip order ≠ filename order.** Clips are placed to match lyric *content*
-  (death-ray on "herskipin þurfa að brenna", bath on "fara í bað? (Eureka!)",
-  Spinoza portrait on the free-will line, …). The `EDIT` list in `build_v3.py`
-  is the cut: `(clip_number, source_start, slot_length)`.
-- **Alignment is per-line.** Aligning the whole 167 s at once drifts ~20 s
+## Tasks
+
+| Task | What it does |
+|---|---|
+| `just setup` | `uv sync` — venv + dependencies |
+| `just fetch` | download media from the HF dataset (`fetch_assets.py`) |
+| `just beats` | beat/onset analysis → `beats.json` |
+| `just align` | GPU forced-alignment of lyrics → `word_times_ctc.json` |
+| `just karaoke` | animated kinetic-karaoke subtitles → `Abravisur_anim.ass` |
+| `just render` | final render (crossfades + beat-snapped + animated karaoke) |
+| `just build` | the whole pipeline, beats → render |
+| `just verify` | per-lyric-line alignment contact sheet |
+| `just lint` / `just fmt` | ruff |
+| `just clean` | remove renders + frame dumps |
+
+## How it works
+
+- **Clip order ≠ filename order.** Clips are placed to match lyric *content* —
+  the Archimedes death-ray (mirror → beam → burning ships) on *"herskipin þurfa
+  að brenna"*, the bath on *"fara í bað? (Eureka!)"*, the Spinoza portrait on the
+  free-will line. The `EDIT` list in `build_v3.py` is the cut:
+  `(clip_number, source_start, slot_length)`.
+- **Forced alignment is per-line.** Aligning the whole 167 s at once drifts ~20 s
   across the big instrumental gaps, so each line is aligned inside its own label
-  window.
-- **Karaoke is burned at absolute audio times**, decoupled from clip
-  boundaries, so cuts can be crossfaded and beat-snapped without desyncing the
-  words.
+  window (`align_ctc.py`, ONNX MMS_FA + uroman/unidecode romanization for the
+  Icelandic þ/ð/æ/ö).
+- **Karaoke is burned at absolute audio times**, decoupled from clip boundaries,
+  so cuts can be crossfaded and beat-snapped without desyncing a single word.
+  Each word is its own positioned event that pops + recolors when sung.
 - **Verse themes:** gold (lines 1–8) → cyan (9–17) → magenta (18–21).
 
-## Variants
+## Project layout
 
-- `Afhverju-Abra_fullblast.mp4` — the works (forced-aligned animated karaoke,
-  crossfades, beat-snapped cuts).
-- `Afhverju-Abra_karaoke.mp4` — simpler hard-cut karaoke (`build_v2.py`).
-- `Afhverju-Abra_novocals.mp4` — concat + audio swap, no lyrics.
+| Path | What |
+|---|---|
+| `Abravisur_labels.txt` | lyrics — TSV `start⇥end⇥text`, one line per phrase |
+| `analyze_audio.py` | beat/onset detection + onset word-timing fallback |
+| `align_ctc.py` | GPU CTC forced alignment → `word_times_ctc.json` |
+| `karaoke_ass.py` | animated kinetic-karaoke `.ass` generator |
+| `build_v3.py` | final render (crossfades + beat-snap + animated karaoke) |
+| `build_v2.py`, `build_lyrics_video.sh` | earlier, simpler passes |
+| `verify_align.py` | alignment contact-sheet sanity check |
+| `fetch_assets.py` | pull media from the HF dataset |
+| `*.json`, `Abravisur*.ass/.srt` | derived alignment / lyric assets |
+
+Media (source clips, audio stems, rendered videos) and the `.venv`, `screens/`,
+`montages/` are **not in git** — see below.
+
+## Assets (Hugging Face dataset)
+
+Media lives in the **private** dataset
+[`RationallyPrime/Whimsy-Daisy`](https://huggingface.co/datasets/RationallyPrime/Whimsy-Daisy):
+
+- `clips/Afhverju-Abra_202606021704_*.mp4` — the 21 source clips
+- `audio/no_vocals.wav` — instrumental backing track (karaoke audio, 167.69 s)
+- `audio/vocals.wav` — isolated vocals (forced alignment)
+- `renders/Afhverju-Abra_fullblast.mp4` — the finished video
+
+`just fetch` (→ `fetch_assets.py`) drops clips at the repo root and audio under
+`~/Downloads/separated/htdemucs/Aravísur/`, where the build scripts expect them.
+
+## Roadmap
+
+- [ ] Narrative re-cut of the pre/post-vocal sections + color grade across clips
+- [ ] **Frontend** — a little web player / editor for the cut
+- [ ] **Vocal-overlay recording** — capture take-home vocal tracks over the karaoke
+- [ ] Title card + end credits
+- [ ] Tighter per-syllable karaoke timing
+
+## License
+
+Code is **MIT** (see `LICENSE`). The media assets — the song *Aravísur*, the
+vocal/instrumental stems, the clips, and the rendered videos — are **not**
+covered and are not licensed for redistribution; all rights reserved by their
+respective owners.
