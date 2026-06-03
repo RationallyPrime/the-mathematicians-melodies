@@ -21,8 +21,10 @@ concat_list.txt
 
 # --- Media assets live on the Hugging Face dataset, not in git ---
 # Source clips and audio stems are published as a HF dataset (see README).
+# Fetch them with: python fetch_assets.py
 Afhverju-Abra_202606021704_*.mp4
 *.wav
+assets/
 
 # --- Session state (not part of the project) ---
 .remember/

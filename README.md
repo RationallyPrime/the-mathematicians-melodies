@@ -28,16 +28,18 @@ companion **Hugging Face dataset** (see *Assets* below). This repo is code only.
 | `.venv-fx/` | ❌ | uv venv (5.4 G) |
 
 ### Assets (Hugging Face dataset)
-The media assets are published as a HF dataset: **`<DATASET_ID>`** (filled in
-once created). It contains:
+Media assets live in the **private** HF dataset
+[`RationallyPrime/Whimsy-Daisy`](https://huggingface.co/datasets/RationallyPrime/Whimsy-Daisy):
 - `clips/Afhverju-Abra_202606021704_*.mp4` — the 21 source clips
 - `audio/no_vocals.wav` — instrumental backing track (karaoke audio, 167.69 s)
 - `audio/vocals.wav` — isolated vocals (used for forced alignment)
 - `renders/Afhverju-Abra_fullblast.mp4` — the finished video
 
-Locally, the build scripts currently reference the audio stems by absolute path
-under `~/Downloads/separated/htdemucs/Aravísur/`; `fetch_assets.py` (added with
-the dataset) pulls everything from HF into the expected layout.
+Fetch them into the layout the build scripts expect:
+```sh
+hf auth login            # private dataset; or export HF_TOKEN=...
+python fetch_assets.py   # clips -> repo root, audio -> ~/Downloads/.../Aravísur/
+```
 
 ## Environment
 
