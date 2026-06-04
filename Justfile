@@ -57,11 +57,11 @@ gen:
     cd web/backend && uv run python -c "import json; from abra_api.app import create_app; open('openapi.json','w').write(json.dumps(create_app().openapi()))"
     cd web/frontend && bun run gen
 
-# run the FastAPI backend on http://127.0.0.1:8000  (docs at /docs)
+# run the FastAPI backend on http://127.0.0.1:5678  (docs at /docs)
 api:
     cd web/backend && uv run python -m abra_api
 
-# run the Vite/bun dev server on http://localhost:5173 (proxies /api -> :8000)
+# run the Vite/bun dev server on http://localhost:4321 (proxies /api -> :5678)
 web:
     cd web/frontend && bun run dev
 

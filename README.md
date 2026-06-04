@@ -98,8 +98,8 @@ Orval → TanStack Query hooks + Zod. See [`web/README.md`](web/README.md).
 
 ```sh
 just web-setup && just gen   # install deps + generate the typed client
-just api                     # FastAPI on :8000
-just web                     # Vite/bun dev on :5173  (proxies /api)
+just api                     # FastAPI on :5678
+just web                     # Vite/bun dev on :4321  (proxies /api)
 ```
 
 ## Roadmap

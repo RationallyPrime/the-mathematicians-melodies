@@ -22,7 +22,7 @@ export function StudioPage() {
   if (project.error || !project.data || recording.error || !recording.data) {
     return (
       <p className="status err">
-        Couldn&rsquo;t reach the API. Start it with <code>uv run python -m abra_api</code> on :8000.
+        Couldn&rsquo;t reach the API. Start it with <code>uv run python -m abra_api</code> on :5678.
       </p>
     )
   }

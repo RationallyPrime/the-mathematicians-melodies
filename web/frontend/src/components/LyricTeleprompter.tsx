@@ -1,4 +1,4 @@
-import { type CSSProperties, useMemo } from 'react'
+import { type CSSProperties, Fragment, useMemo } from 'react'
 import type { LyricLine } from '../api/generated/model'
 
 const LEAD = 0.4
@@ -21,14 +21,19 @@ function Line({
         const sung = position === 'prev' || (position === 'cur' && t >= w.start)
         const pop = position === 'cur' && sung && t < w.start + POP
         return (
-          <span
-            // biome-ignore lint/suspicious/noArrayIndexKey: word list is stable per line
-            key={i}
-            className={`kw${sung ? ' sung' : ''}${pop ? ' pop' : ''}`}
-            style={sung ? { color: line.theme.fill } : undefined}
-          >
-            {w.word}{' '}
-          </span>
+          // The space lives OUTSIDE the styled span: .kw is inline-block (so the
+          // pop transform applies), and an inline-block trims the trailing space
+          // inside its own box — which fused the words. As a sibling text node it
+          // survives as a normal, breakable inter-word space.
+          // biome-ignore lint/suspicious/noArrayIndexKey: word list is stable per line
+          <Fragment key={i}>
+            <span
+              className={`kw${sung ? ' sung' : ''}${pop ? ' pop' : ''}`}
+              style={sung ? { color: line.theme.fill } : undefined}
+            >
+              {w.word}
+            </span>{' '}
+          </Fragment>
         )
       })}
     </div>

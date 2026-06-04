@@ -89,13 +89,13 @@ class Settings(BaseSettings):
     # Manual purge horizon for stale takes (see the purge task).
     take_ttl_days: int = 30
 
-    # CORS origins for the Vite/bun dev server.
+    # CORS origins for the Vite/bun dev server (unconventional dev port 4321).
     cors_origins: list[str] = Field(
-        default_factory=lambda: ["http://localhost:5173", "http://127.0.0.1:5173"]
+        default_factory=lambda: ["http://localhost:4321", "http://127.0.0.1:4321"]
     )
 
     host: str = "127.0.0.1"
-    port: int = 8000
+    port: int = 5678
     reload: bool = True
     log_json: bool = False
 

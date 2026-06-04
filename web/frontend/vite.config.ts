@@ -8,10 +8,10 @@ export default defineConfig({
   css: { transformer: 'lightningcss' },
   build: { cssMinify: 'lightningcss' },
   server: {
-    port: 5173,
+    port: 4321,
     proxy: {
-      '/api': { target: 'http://127.0.0.1:8000', changeOrigin: true },
-      '/openapi.json': { target: 'http://127.0.0.1:8000', changeOrigin: true },
+      '/api': { target: 'http://127.0.0.1:5678', changeOrigin: true },
+      '/openapi.json': { target: 'http://127.0.0.1:5678', changeOrigin: true },
     },
   },
 })
