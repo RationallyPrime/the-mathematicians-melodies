@@ -1,6 +1,6 @@
 [project]
 name = "afhverju-abra"
-version = "0.1.0"
+version = "0.2.0"
 description = "Karaoke music video pipeline for the Icelandic kids' science song Aravísur (Afhverju Abra) — forced-aligned animated lyrics + beat-synced crossfades."
 readme = "README.md"
 requires-python = ">=3.12"

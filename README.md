@@ -10,8 +10,8 @@ karaoke backing track, **forced-aligns** the lyrics to the singing for
 syllable-accurate timing, and burns in **animated, verse-themed karaoke** over
 **beat-synced crossfades**.
 
-> **Status:** v0.1.0 — the full-blast cut is done. 🐱🔊
-> Code: MIT · Media: private HF dataset (rights reserved) · Type checker: nope, it's a vibes release.
+> **Status:** v0.2.0 — full-blast cut + a bun/FastAPI web player & cut editor. 🐱🔊
+> Code: MIT · Media: private HF dataset (rights reserved) · Type checker: vibes on the render scripts, strict on the web app.
 
 ---
 
@@ -88,10 +88,24 @@ Media lives in the **private** dataset
 `just fetch` (→ `fetch_assets.py`) drops clips at the repo root and audio under
 `~/Downloads/separated/htdemucs/Aravísur/`, where the build scripts expect them.
 
+## Web app
+
+A bun-managed React front-end (`web/frontend`) over a FastAPI backend
+(`web/backend`): a **player** (the render with a beat-synced word teleprompter +
+a clickable slot ribbon) and a **cut editor** that writes `cut.json` — the same
+file the pipeline renders from. End-to-end type-safe: Pydantic v2 → OpenAPI →
+Orval → TanStack Query hooks + Zod. See [`web/README.md`](web/README.md).
+
+```sh
+just web-setup && just gen   # install deps + generate the typed client
+just api                     # FastAPI on :8000
+just web                     # Vite/bun dev on :5173  (proxies /api)
+```
+
 ## Roadmap
 
 - [ ] Narrative re-cut of the pre/post-vocal sections + color grade across clips
-- [ ] **Frontend** — a little web player / editor for the cut
+- [x] **Frontend** — a bun/FastAPI web player + cut editor (see [`web/`](web/README.md))
 - [ ] **Vocal-overlay recording** — capture take-home vocal tracks over the karaoke
 - [ ] Title card + end credits
 - [ ] Tighter per-syllable karaoke timing
