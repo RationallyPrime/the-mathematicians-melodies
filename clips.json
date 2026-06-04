@@ -1,0 +1,23 @@
+[
+  { "id": 1,  "title": "Abra (title cat)",        "description": "Yellow cat Abra — used as bookend / reprise", "source_seconds": 10.0 },
+  { "id": 2,  "title": "Spiral galaxy",           "description": "Spinning spiral — 'vill vita um hvað þetta snýst'", "source_seconds": 4.0 },
+  { "id": 3,  "title": "Blue flame in jar",       "description": "What causes heat", "source_seconds": 10.0 },
+  { "id": 4,  "title": "Quiet arched room",       "description": "Arched room → sleeping cat (goodnight)", "source_seconds": 10.0 },
+  { "id": 5,  "title": "Archimedes death ray",    "description": "Mirror → beam → burning ships", "source_seconds": 10.0 },
+  { "id": 6,  "title": "Puzzled Abra",            "description": "Puzzled cat / paw (intro)", "source_seconds": 10.0 },
+  { "id": 7,  "title": "Bath → Eureka",           "description": "Bath, Eureka glow — 'fara í bað'", "source_seconds": 10.0 },
+  { "id": 8,  "title": "Studying",                "description": "Abra studying — no one fast enough to answer", "source_seconds": 10.0 },
+  { "id": 9,  "title": "Spinoza portrait",        "description": "Free-will line", "source_seconds": 10.0 },
+  { "id": 10, "title": "Molecules",               "description": "Sameindir — molecules drifting", "source_seconds": 10.0 },
+  { "id": 11, "title": "Atom / hydrogen",         "description": "Vetni", "source_seconds": 10.0 },
+  { "id": 12, "title": "Cosmic field",            "description": "Quantum field theory / relativity", "source_seconds": 10.0 },
+  { "id": 13, "title": "The gathering",           "description": "Everyone Abra meets (tea-party)", "source_seconds": 10.0 },
+  { "id": 14, "title": "4-scene montage",         "description": "Four-scene break montage", "source_seconds": 10.0 },
+  { "id": 15, "title": "Cat wonders",             "description": "Cat pondering during the break", "source_seconds": 10.0 },
+  { "id": 16, "title": "Golden sun-gear",         "description": "Golden gear / sun", "source_seconds": 10.0 },
+  { "id": 17, "title": "Lightbulb idea",          "description": "Lightbulb / brain idea", "source_seconds": 10.0 },
+  { "id": 18, "title": "Chalkboard answer",       "description": "Chalkboard, finished answer", "source_seconds": 10.0 },
+  { "id": 19, "title": "Flying-books frenzy",     "description": "Let's go / find out now", "source_seconds": 10.0 },
+  { "id": 20, "title": "Molecular field",         "description": "Molecular field break", "source_seconds": 10.0 },
+  { "id": 21, "title": "KADABRA finale",          "description": "KADABRA payoff", "source_seconds": 10.0 }
+]

@@ -1,0 +1,164 @@
+{
+  "title": "Afhverju Abra — full blast",
+  "audio_duration": 167.69,
+  "crossfade": 0.4,
+  "fps": 24,
+  "width": 1280,
+  "height": 720,
+  "slots": [
+    {
+      "index": 0,
+      "clip": 6,
+      "ss": 0.0,
+      "length": 6.0,
+      "label": "intro — puzzled Abra"
+    },
+    {
+      "index": 1,
+      "clip": 1,
+      "ss": 0.0,
+      "length": 9.6,
+      "label": "L1 — Abra gulur / dulur"
+    },
+    {
+      "index": 2,
+      "clip": 2,
+      "ss": 0.0,
+      "length": 3.6,
+      "label": "L2 — spiral (snýst)"
+    },
+    {
+      "index": 3,
+      "clip": 8,
+      "ss": 0.0,
+      "length": 9.6,
+      "label": "L3–4 — studying, no one fast enough"
+    },
+    {
+      "index": 4,
+      "clip": 3,
+      "ss": 4.6,
+      "length": 5.0,
+      "label": "L5 — what causes heat (blue flame)"
+    },
+    {
+      "index": 5,
+      "clip": 10,
+      "ss": 4.6,
+      "length": 4.4,
+      "label": "L6 — molecules (sameindir)"
+    },
+    {
+      "index": 6,
+      "clip": 5,
+      "ss": 0.0,
+      "length": 9.6,
+      "label": "L7–8 — Archimedes death ray"
+    },
+    {
+      "index": 7,
+      "clip": 16,
+      "ss": 1.8,
+      "length": 7.8,
+      "label": "break — golden sun-gear"
+    },
+    {
+      "index": 8,
+      "clip": 20,
+      "ss": 0.0,
+      "length": 6.6,
+      "label": "break — molecular field"
+    },
+    {
+      "index": 9,
+      "clip": 13,
+      "ss": 0.0,
+      "length": 9.44,
+      "label": "L9–10 — the gathering"
+    },
+    {
+      "index": 10,
+      "clip": 11,
+      "ss": 0.0,
+      "length": 8.92,
+      "label": "L11–12 — atom (vetni)"
+    },
+    {
+      "index": 11,
+      "clip": 9,
+      "ss": 2.0,
+      "length": 7.6,
+      "label": "L13–14 — Spinoza portrait"
+    },
+    {
+      "index": 12,
+      "clip": 12,
+      "ss": 0.0,
+      "length": 7.16,
+      "label": "L15–16 — cosmic"
+    },
+    {
+      "index": 13,
+      "clip": 7,
+      "ss": 1.4,
+      "length": 8.2,
+      "label": "L17 — bath → Eureka"
+    },
+    {
+      "index": 14,
+      "clip": 14,
+      "ss": 0.0,
+      "length": 9.6,
+      "label": "break — 4-scene montage"
+    },
+    {
+      "index": 15,
+      "clip": 17,
+      "ss": 1.2,
+      "length": 8.4,
+      "label": "break — lightbulb idea"
+    },
+    {
+      "index": 16,
+      "clip": 15,
+      "ss": 0.0,
+      "length": 8.19,
+      "label": "break — cat wonders"
+    },
+    {
+      "index": 17,
+      "clip": 21,
+      "ss": 4.0,
+      "length": 5.6,
+      "label": "L18 — KADABRA"
+    },
+    {
+      "index": 18,
+      "clip": 18,
+      "ss": 2.0,
+      "length": 7.6,
+      "label": "L19–20 — chalkboard answer"
+    },
+    {
+      "index": 19,
+      "clip": 19,
+      "ss": 1.6,
+      "length": 8.0,
+      "label": "L20–21 — flying books"
+    },
+    {
+      "index": 20,
+      "clip": 1,
+      "ss": 0.0,
+      "length": 8.5,
+      "label": "outro — Abra reprise"
+    },
+    {
+      "index": 21,
+      "clip": 4,
+      "ss": 1.4,
+      "length": 8.28,
+      "label": "outro — sleeping cat (goodnight)"
+    }
+  ]
+}

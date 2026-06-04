@@ -45,6 +45,30 @@ lint:
 fmt:
     uvx ruff format .
 
+# ---- web app (bun frontend + FastAPI backend) -----------------------------
+
+# install web deps: backend (uv) + frontend (bun)
+web-setup:
+    cd web/backend && uv sync
+    cd web/frontend && bun install
+
+# dump OpenAPI from the Pydantic models, then regenerate the typed client (orval)
+gen:
+    cd web/backend && uv run python -c "import json; from abra_api.app import create_app; open('openapi.json','w').write(json.dumps(create_app().openapi()))"
+    cd web/frontend && bun run gen
+
+# run the FastAPI backend on http://127.0.0.1:8000  (docs at /docs)
+api:
+    cd web/backend && uv run python -m abra_api
+
+# run the Vite/bun dev server on http://localhost:5173 (proxies /api -> :8000)
+web:
+    cd web/frontend && bun run dev
+
+# typecheck + production build of the frontend
+web-build:
+    cd web/frontend && bun run build
+
 # remove generated renders & frame dumps (keeps source clips + assets)
 clean:
     rm -f Afhverju-Abra_full.mp4 Afhverju-Abra_novocals.mp4 \

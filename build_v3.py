@@ -11,39 +11,20 @@ import json
 import subprocess
 from pathlib import Path
 
+from cut import edit_list, load_cut
+
 ROOT = Path("/home/rationallyprime/Videos/Afhverju-Abra")
 PREFIX = "Afhverju-Abra_202606021704"
 AUDIO = "/home/rationallyprime/Downloads/separated/htdemucs/Aravísur/no_vocals.wav"
 ASS = "Abravisur_anim.ass"
 OUT = ROOT / "Afhverju-Abra_fullblast.mp4"
-D = 0.40  # crossfade duration
 
-# (clip, source_start, slot_len)  -- slot_len sums to 167.69; every non-last
-# clip has ss+len <= 9.6 (or 3.6 for clip2) so it can extend by D.
-EDIT = [
-    (6, 0.00, 6.00),
-    (1, 0.00, 9.60),
-    (2, 0.00, 3.60),
-    (8, 0.00, 9.60),
-    (3, 4.60, 5.00),
-    (10, 4.60, 4.40),
-    (5, 0.00, 9.60),
-    (16, 1.80, 7.80),
-    (20, 0.00, 6.60),
-    (13, 0.00, 9.44),
-    (11, 0.00, 8.92),
-    (9, 2.00, 7.60),
-    (12, 0.00, 7.16),
-    (7, 1.40, 8.20),
-    (14, 0.00, 9.60),
-    (17, 1.20, 8.40),
-    (15, 0.00, 8.19),
-    (21, 4.00, 5.60),
-    (18, 2.00, 7.60),
-    (19, 1.60, 8.00),
-    (1, 0.00, 8.50),
-    (4, 1.40, 8.28),
-]
+# The cut lives in cut.json (single source of truth, shared with the web app).
+# slot_len sums to 167.69; every non-last clip has ss+len <= 9.6 (3.6 for clip2)
+# so it can extend by the crossfade D and still have source to spare.
+_cut = load_cut()
+D = float(_cut["crossfade"])  # crossfade duration
+EDIT = edit_list(_cut)
 N = len(EDIT)
 beats = json.loads((ROOT / "beats.json").read_text())["beats"]
 

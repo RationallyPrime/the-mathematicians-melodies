@@ -1,0 +1,3 @@
+[install]
+# Use the bun lockfile; this project is bun-managed (replaces pnpm).
+exact = false

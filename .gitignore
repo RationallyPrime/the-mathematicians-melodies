@@ -27,5 +27,13 @@ Afhverju-Abra_202606021704_*.mp4
 *.wav
 assets/
 
+# --- Web app (bun frontend + FastAPI backend) ---
+web/backend/.venv/
+web/backend/openapi.json          # regenerated from the Pydantic models (`just gen`)
+web/frontend/node_modules/
+web/frontend/dist/
+web/frontend/src/api/generated/   # orval output (regenerate with `just gen`)
+web/frontend/src/api/zod/
+
 # --- Session state (not part of the project) ---
 .remember/
