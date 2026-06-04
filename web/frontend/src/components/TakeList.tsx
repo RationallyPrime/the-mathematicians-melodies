@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
+import { Download, Trash2 } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { mediaUrl } from '../api/client'
 import type { Take } from '../api/generated/model'
@@ -11,6 +12,12 @@ import {
   useMixTake,
   useUpdateTake,
 } from '../api/generated/takes/takes'
+import type { BadgeProps } from './ui/Badge'
+import { Badge } from './ui/Badge'
+import { Button, buttonVariants } from './ui/Button'
+import { Card, CardHeader } from './ui/Card'
+import { IconButton } from './ui/IconButton'
+import { Slider } from './ui/Slider'
 
 // The voice nudge is signed: POSITIVE pulls the voice EARLIER (server subtracts
 // latency_ms from record_start_song_sec). Honour that semantic in the label.
@@ -43,30 +50,30 @@ function size(bytes: number | null | undefined): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
 }
 
-function badgeClass(status: Take['status']): string {
-  if (status === 'done') return 'badge badge-done'
-  if (status === 'failed') return 'badge badge-failed'
-  if (status === 'mixing' || status === 'queued') return 'badge badge-mixing'
-  return 'badge'
+function badgeTone(status: Take['status']): BadgeProps['tone'] {
+  if (status === 'done') return 'done'
+  if (status === 'failed') return 'failed'
+  if (status === 'mixing' || status === 'queued') return 'mixing'
+  return 'neutral'
 }
 
 export function TakeList() {
   const { data: takes, isLoading, error } = useListTakes()
 
-  if (isLoading) return <p className="status">Loading takes…</p>
+  if (isLoading) return <p className="text-muted text-sm">Loading takes…</p>
   if (error) {
     return (
-      <p className="status err">
+      <p className="text-error text-sm">
         Couldn&rsquo;t load takes. Start the API with <code>uv run python -m abra_api</code>.
       </p>
     )
   }
   if (!takes || takes.length === 0) {
-    return <p className="status takes-empty">No takes yet — go sing. 🎤</p>
+    return <p className="text-muted text-sm">No takes yet — go sing. 🎤</p>
   }
 
   return (
-    <div className="takes">
+    <div className="flex flex-col gap-4">
       {takes.map((take) => (
         <TakeRow key={take.id} take={take} />
       ))}
@@ -157,12 +164,21 @@ function TakeRow({ take }: { take: Take }) {
   // Song-agnostic filename (no hardcoded song title — reusable for the next project).
   const downloadName = `take-${take.id.slice(0, 8)}.${take.kind === 'video' ? 'mp4' : 'm4a'}`
 
+  const status = remixing ? 'mixing' : take.status
+  // tone tracks the DISPLAYED status so the colour/animated dot match a live
+  // client-side remix (not just the persisted take.status).
+  const tone = badgeTone(status)
+
   return (
-    <div className={`take-row${take.starred ? ' starred' : ''}`}>
-      <div className="take-head">
+    <Card className="animate-folio-in">
+      <CardHeader className="gap-2">
         <button
           type="button"
-          className={`star${take.starred ? ' on' : ''}`}
+          className={`text-lg leading-none transition-colors${
+            take.starred
+              ? ' text-primary [text-shadow:0_0_10px_color-mix(in_srgb,var(--color-primary)_60%,transparent)]'
+              : ' text-faint hover:text-on-surface'
+          }`}
           onClick={toggleStar}
           disabled={update.isPending}
           aria-label={take.starred ? 'Unstar take' : 'Star take'}
@@ -171,8 +187,9 @@ function TakeRow({ take }: { take: Take }) {
           {take.starred ? '★' : '☆'}
         </button>
         <input
-          className="take-label"
+          className="min-w-0 flex-1 rounded border border-line bg-surface-3 px-2.5 py-1.5 text-sm text-on-surface placeholder:text-muted focus:border-primary focus:outline-none"
           value={labelDraft}
+          aria-label="Take label"
           placeholder="(unlabelled take)"
           onChange={(e) => setLabelDraft(e.target.value)}
           onBlur={commitLabel}
@@ -180,20 +197,23 @@ function TakeRow({ take }: { take: Take }) {
             if (e.key === 'Enter') e.currentTarget.blur()
           }}
         />
-        <span className={badgeClass(take.status)}>{remixing ? 'mixing' : take.status}</span>
-        <button
-          type="button"
-          className="trash"
+        <Badge tone={tone} dot={tone === 'mixing'}>
+          {status}
+        </Badge>
+        <IconButton
+          variant="ghost"
+          size="md"
+          className="h-9 w-9 border-transparent bg-transparent text-error hover:border-line"
           onClick={onDelete}
           disabled={remove.isPending}
           aria-label="Delete take"
           title="Delete"
         >
-          🗑
-        </button>
-      </div>
+          <Trash2 size={16} />
+        </IconButton>
+      </CardHeader>
 
-      <div className="take-meta">
+      <div className="flex flex-wrap gap-x-4 gap-y-1 px-4 pt-2 font-mono text-xs text-muted tabular-nums">
         <span>{human(take.created_at)}</span>
         <span>{take.kind}</span>
         <span>{dur(take.duration)}</span>
@@ -201,57 +221,59 @@ function TakeRow({ take }: { take: Take }) {
         <span>latency {take.latency_ms}ms</span>
       </div>
 
-      <div className="take-replay">
-        <span className="take-replay-label">Raw vocal</span>
+      <div className="flex flex-col gap-1.5 px-4 pt-3">
+        <span className="text-muted text-xs">Raw vocal</span>
         {/* biome-ignore lint/a11y/useMediaCaption: raw recording, no caption track */}
-        <audio controls preload="none" src={rawSrc} />
+        <audio className="w-full" controls preload="none" src={rawSrc} />
       </div>
 
-      <div className="take-actions">
-        <label className="nudge">
-          <span>
-            voice nudge {nudge > 0 ? '+' : ''}
-            {nudge}ms {nudge === 0 ? '' : nudge > 0 ? '(earlier)' : '(later)'}
-          </span>
-          <input
-            type="range"
-            min={NUDGE_MIN}
-            max={NUDGE_MAX}
-            step={NUDGE_STEP}
-            value={nudge}
-            onChange={(e) => setNudge(Number(e.target.value))}
-            disabled={remixing}
-          />
-        </label>
-        <button
+      <div className="flex flex-col gap-3 px-4 pt-4 pb-4">
+        <Slider
+          label="voice nudge"
+          valueLabel={`${nudge > 0 ? '+' : ''}${nudge}ms${
+            nudge === 0 ? '' : nudge > 0 ? ' (earlier)' : ' (later)'
+          }`}
+          min={NUDGE_MIN}
+          max={NUDGE_MAX}
+          step={NUDGE_STEP}
+          value={nudge}
+          onChange={(e) => setNudge(Number(e.target.value))}
+          disabled={remixing}
+        />
+        <Button
           type="button"
-          className="primary"
+          variant="primary"
           onClick={applyNudge}
           disabled={remixing || update.isPending}
           title="Re-mix with the nudged sync — no need to re-sing"
         >
           {remixing ? 'Mixing…' : 'Fix sync & re-mix'}
-        </button>
+        </Button>
       </div>
 
       {take.status === 'failed' && !remixing && (
-        <p className="take-fail">Last mix failed. Try a nudge and re-mix.</p>
+        <p className="px-4 pb-4 text-error text-sm">Last mix failed. Try a nudge and re-mix.</p>
       )}
 
       {take.status === 'done' && !remixing && (
-        <div className="take-mix">
+        <div className="flex flex-col gap-2 px-4 pb-4">
           {take.kind === 'video' ? (
             // biome-ignore lint/a11y/useMediaCaption: lyrics are burned into the render
-            <video className="take-mix-media" controls playsInline src={mixSrc} />
+            <video className="w-full rounded-lg bg-black" controls playsInline src={mixSrc} />
           ) : (
             // biome-ignore lint/a11y/useMediaCaption: finished audio mix, no caption track
-            <audio className="take-mix-media" controls preload="none" src={mixSrc} />
+            <audio className="w-full rounded-lg bg-black" controls preload="none" src={mixSrc} />
           )}
-          <a className="ghost take-download" download={downloadName} href={mixSrc}>
-            ⬇ Download
+          <a
+            className={buttonVariants({ variant: 'ghost', size: 'sm' })}
+            download={downloadName}
+            href={mixSrc}
+          >
+            <Download size={16} />
+            Download
           </a>
         </div>
       )}
-    </div>
+    </Card>
   )
 }

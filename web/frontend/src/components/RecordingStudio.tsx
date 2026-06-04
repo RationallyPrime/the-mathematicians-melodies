@@ -1,4 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query'
+import { Circle, Mic, Square } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { mediaUrl } from '../api/client'
 import type {
@@ -20,6 +21,10 @@ import {
 import { RecordingEngine, RecordingEngineError } from '../audio/RecordingEngine'
 import { calibrate, loadCalibration, saveCalibration } from '../audio/calibrate'
 import { LyricTeleprompter } from './LyricTeleprompter'
+import { Button, buttonVariants } from './ui/Button'
+import { IconButton } from './ui/IconButton'
+import { Slider } from './ui/Slider'
+import { VuMeter } from './ui/VuMeter'
 
 /** Signed manual nudge bound, in ms. POSITIVE = voice pulled EARLIER (the server
  *  computes net_delay = record_start_song_sec - latency_ms/1000, so larger
@@ -294,8 +299,8 @@ export function RecordingStudio({
 
   if (!secure) {
     return (
-      <div className="studio">
-        <p className="status err">
+      <div className="flex flex-col gap-6">
+        <p className="rounded-xl border border-error/50 bg-error/10 p-4 text-center font-mono text-sm text-error">
           Recording needs a secure context. Open this over <code>https</code> or{' '}
           <code>localhost</code> to use the studio.
         </p>
@@ -311,161 +316,213 @@ export function RecordingStudio({
   const canStop = st === 'recording'
   const counting = st === 'recording' && transport.position < 0
   const songTime = transport.position > 0 ? transport.position : 0
-  const vuPct = Math.round(Math.min(1, transport.level) * 100)
 
   const mixing = status?.state === 'running' || status?.state === 'queued'
   const busy = createTake.isPending || mixTake.isPending
 
   return (
-    <div className="studio">
-      <div className="studio-head">
-        <h1>Recording studio</h1>
-        <p className="hint">
-          Sing over the backing through <strong>wired headphones</strong>. The audio engine is the
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-1.5">
+        <h1 className="font-display text-4xl leading-tight text-on-surface">Recording studio</h1>
+        <p className="max-w-2xl text-sm leading-relaxed text-muted">
+          Sing over the backing through{' '}
+          <strong className="text-on-surface-dim">wired headphones</strong>. The audio engine is the
           clock — the video and words below are slaved to it. Calibrate once per device for tight
           sync; nudge by hand to taste.
         </p>
       </div>
 
-      <div className="studio-warn">
-        <label className="headphone-ack">
+      <div className="rounded-xl border border-[color-mix(in_oklab,var(--color-primary)_50%,var(--color-line))] bg-[color-mix(in_oklab,var(--color-primary)_12%,var(--color-surface-2))] p-4">
+        <label className="flex cursor-pointer items-start gap-3 text-sm leading-relaxed text-on-surface-dim">
+          <span aria-hidden className="text-lg leading-none">
+            🎧
+          </span>
           <input
             type="checkbox"
+            className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer accent-[var(--color-primary)]"
             checked={headphonesAck}
             onChange={(e) => setHeadphonesAck(e.target.checked)}
           />
           <span>
-            I&rsquo;m on <strong>WIRED</strong> headphones (Bluetooth flips to call-quality and
-            ruins the take) — proceed at my own risk.
+            I&rsquo;m on <strong className="text-on-surface">WIRED</strong> headphones (Bluetooth
+            flips to call-quality and ruins the take) — proceed at my own risk.
           </span>
         </label>
       </div>
 
-      <div className="studio-stage">
+      <div className="relative overflow-hidden rounded-2xl border border-line bg-surface shadow-folio">
         <video
           ref={videoRef}
-          className="video"
+          className="block aspect-video w-full bg-black object-contain"
           src={mediaUrl(render.url ?? '/api/media/render')}
           muted
           playsInline
         />
         <LyricTeleprompter lyrics={lyrics} t={songTime} />
-        {counting && <div className="count-in">{Math.ceil(-transport.position)}</div>}
+        {counting && (
+          <div className="absolute inset-0 grid place-items-center bg-black/45">
+            <span className="animate-count-pop font-display text-8xl font-black text-white [text-shadow:0_0_28px_color-mix(in_srgb,var(--color-primary)_75%,transparent)]">
+              {Math.ceil(-transport.position)}
+            </span>
+          </div>
+        )}
       </div>
 
-      <div className="vu" aria-label="input level">
-        <div className="vu-bar" style={{ width: `${vuPct}%` }} />
-      </div>
+      <VuMeter level={transport.level} />
 
-      <div className="studio-transport">
-        <button type="button" className="ghost" onClick={onArm} disabled={!canArm}>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={onArm}
+          disabled={!canArm}
+          className={st === 'armed' ? 'text-success border-success/50 bg-success/10' : undefined}
+        >
           {st === 'armed' ? 'Armed' : 'Arm'}
-        </button>
-        <button type="button" className="primary" onClick={onRecord} disabled={!canRecord}>
-          Record
-        </button>
-        <button type="button" className="render" onClick={onStop} disabled={!canStop || busy}>
+        </Button>
+        <IconButton
+          type="button"
+          variant="record"
+          size="xl"
+          recording={st === 'recording'}
+          className={st === 'armed' ? 'animate-vu-pulse' : undefined}
+          onClick={onRecord}
+          disabled={!canRecord}
+          aria-label="Record"
+        >
+          {st === 'recording' ? <Mic size={28} /> : <Circle size={28} fill="currentColor" />}
+        </IconButton>
+        <Button type="button" variant="danger" onClick={onStop} disabled={!canStop || busy}>
+          <Square size={16} fill="currentColor" />
           Stop
-        </button>
-        <span className="spacer" />
-        <span className={`studio-clock ${counting ? 'counting' : ''}`}>
+        </Button>
+        <span className="flex-1" />
+        <span
+          className={`font-mono text-sm tabular-nums ${counting ? 'text-primary' : 'text-on-surface-dim'}`}
+        >
           {counting ? `count-in ${Math.ceil(-transport.position)}` : `${songTime.toFixed(2)}s`}
         </span>
       </div>
 
-      {armError && <pre className="err-box">{armError}</pre>}
+      {armError && (
+        <pre className="whitespace-pre-wrap rounded-lg border border-error/50 bg-error/10 p-3 font-mono text-sm text-error">
+          {armError}
+        </pre>
+      )}
 
-      <div className="studio-controls">
-        <div className="calib">
-          <button type="button" className="ghost" onClick={onCalibrate} disabled={calibrating}>
+      <div className="flex flex-col gap-4 rounded-2xl border border-line bg-surface-2 p-4 shadow-folio">
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={onCalibrate}
+            disabled={calibrating}
+          >
             {calibrating ? 'Calibrating…' : 'Calibrate latency'}
-          </button>
-          <span className="calib-readout">
+          </Button>
+          <span className="font-mono text-xs text-muted">
             {calibMs === null
               ? 'no latency yet'
               : `${calibSource === 'measured' ? 'measured' : 'estimated'} ${calibMs.toFixed(0)}ms`}
           </span>
-          {calibError && <span className="calib-err">{calibError}</span>}
+          {calibError && <span className="font-mono text-xs text-error">{calibError}</span>}
         </div>
 
-        <label className="nudge">
-          nudge&nbsp;
-          <input
-            type="range"
-            min={-NUDGE_RANGE_MS}
-            max={NUDGE_RANGE_MS}
-            step={5}
-            value={nudgeMs}
-            onChange={(e) => setNudgeMs(Number(e.target.value))}
-          />
-          <span className="nudge-val">
-            {nudgeMs > 0 ? '+' : ''}
-            {nudgeMs}ms {nudgeMs === 0 ? '' : nudgeMs > 0 ? '(voice earlier)' : '(voice later)'}
-          </span>
-        </label>
+        <Slider
+          label="nudge"
+          valueLabel={
+            <>
+              {nudgeMs > 0 ? '+' : ''}
+              {nudgeMs}ms {nudgeMs === 0 ? '' : nudgeMs > 0 ? '(voice earlier)' : '(voice later)'}
+            </>
+          }
+          min={-NUDGE_RANGE_MS}
+          max={NUDGE_RANGE_MS}
+          step={5}
+          value={nudgeMs}
+          onChange={(e) => setNudgeMs(Number(e.target.value))}
+        />
 
-        <div className="kind-toggle">
-          deliverable&nbsp;
-          <button
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-muted">deliverable</span>
+          <Button
             type="button"
-            className={kind === 'video' ? 'primary' : 'ghost'}
+            size="sm"
+            variant={kind === 'video' ? 'primary' : 'ghost'}
             onClick={() => setKind('video')}
           >
             video
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
-            className={kind === 'audio' ? 'primary' : 'ghost'}
+            size="sm"
+            variant={kind === 'audio' ? 'primary' : 'ghost'}
             onClick={() => setKind('audio')}
           >
             audio
-          </button>
+          </Button>
         </div>
 
-        <label className="take-label">
-          label&nbsp;
+        <label className="flex items-center gap-2 text-xs text-muted">
+          label
           <input
             type="text"
             placeholder="optional"
+            className="flex-1 rounded-lg border border-line bg-surface-3 px-3 py-1.5 text-sm text-on-surface placeholder:text-muted focus:border-primary focus:outline-none"
             value={label}
             onChange={(e) => setLabel(e.target.value)}
           />
         </label>
 
-        <span className="effective-latency">
+        <span className="font-mono text-xs text-muted">
           effective latency {effectiveLatencyMs.toFixed(0)}ms
         </span>
       </div>
 
       {createTake.error && (
-        <pre className="err-box">Take upload failed: {String(createTake.error)}</pre>
+        <pre className="whitespace-pre-wrap rounded-lg border border-error/50 bg-error/10 p-3 font-mono text-sm text-error">
+          Take upload failed: {String(createTake.error)}
+        </pre>
       )}
-      {mixTake.error && <pre className="err-box">Mix request failed: {String(mixTake.error)}</pre>}
+      {mixTake.error && (
+        <pre className="whitespace-pre-wrap rounded-lg border border-error/50 bg-error/10 p-3 font-mono text-sm text-error">
+          Mix request failed: {String(mixTake.error)}
+        </pre>
+      )}
 
       {activeTakeId !== null && status && status.state !== 'idle' && (
-        <div className={`studio-status ${status.state}`}>
-          <strong>mix: {status.state}</strong>
+        <div className="rounded-lg border border-line bg-surface-2 p-3 text-sm text-on-surface-dim">
+          <strong className="text-on-surface">mix: {status.state}</strong>
           {status.returncode != null && <span> (rc {status.returncode})</span>}
-          {status.log_tail && <pre className="log">{status.log_tail}</pre>}
+          {status.log_tail && (
+            <pre className="mt-2 max-h-40 overflow-auto rounded bg-surface-3 p-2 font-mono text-xs text-muted">
+              {status.log_tail}
+            </pre>
+          )}
         </div>
       )}
 
       {mixDone && mixUrl && (
-        <div className="studio-result">
+        <div className="flex flex-col gap-3 rounded-2xl border border-line bg-surface-2 p-4 shadow-folio">
           {mixIsVideo ? (
             // biome-ignore lint/a11y/useMediaCaption: this is a karaoke take preview
-            <video className="video" src={mixUrl} controls playsInline />
+            <video className="w-full rounded-lg bg-black" src={mixUrl} controls playsInline />
           ) : (
             // biome-ignore lint/a11y/useMediaCaption: this is a karaoke take preview
-            <audio className="result-audio" src={mixUrl} controls />
+            <audio className="w-full" src={mixUrl} controls />
           )}
-          <a className="primary download" href={mixUrl} download>
+          <a className={buttonVariants({ variant: 'primary' })} href={mixUrl} download>
             Download take
           </a>
         </div>
       )}
 
-      {mixing && <p className="status">Mixing your take…</p>}
+      {mixing && (
+        <p className="animate-folio-in p-2 text-center font-display text-lg text-muted">
+          Mixing your take…
+        </p>
+      )}
     </div>
   )
 }
