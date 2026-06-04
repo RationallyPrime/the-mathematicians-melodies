@@ -67,10 +67,9 @@ just build          # beats -> align -> karaoke -> render  => the finished video
 | `align_ctc.py` | GPU CTC forced alignment → `word_times_ctc.json` |
 | `karaoke_ass.py` | animated kinetic-karaoke `.ass` generator |
 | `build_v3.py` | final render (crossfades + beat-snap + animated karaoke) |
-| `build_v2.py`, `build_lyrics_video.sh` | earlier, simpler passes |
 | `verify_align.py` | alignment contact-sheet sanity check |
 | `fetch_assets.py` | pull media from the HF dataset |
-| `*.json`, `Abravisur*.ass/.srt` | derived alignment / lyric assets |
+| `*.json`, `Abravisur_anim.ass` | derived alignment / lyric assets |
 
 Media (source clips, audio stems, rendered videos) and the `.venv`, `screens/`,
 `montages/` are **not in git** — see below.

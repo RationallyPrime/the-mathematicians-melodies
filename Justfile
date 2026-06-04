@@ -65,9 +65,22 @@ api:
 web:
     cd web/frontend && bun run dev
 
+# run both dev servers together (backend :5678 + frontend :4321); Ctrl-C stops both
+dev:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    trap 'kill 0' EXIT
+    just api &
+    just web &
+    wait
+
 # typecheck + production build of the frontend
 web-build:
     cd web/frontend && bun run build
+
+# run the backend test suite (pytest + hypothesis)
+test:
+    cd web/backend && uv run pytest -q
 
 # purge recorded takes older than the configured TTL (ABRA_TAKE_TTL_DAYS)
 takes-clean:
@@ -84,6 +97,38 @@ take ID='':
     sr,dur,_=s.backing_facts(); \
     argv,out=build_mix_argv(take, TakeMixRequest(), audio_path=s.audio_path, render_path=s.render_path, backing_sr=sr, backing_duration=dur, repo=repo); \
     print('ffmpeg argv:', argv); subprocess.run(argv, check=True); print('reproduced ->', out)"
+
+# ---- audio (PipeWire) — toggleable recording profile ----------------------
+# Runtime-only PipeWire/PulseAudio state: no sudo, no config files, fully
+# reversible with `audio-normal`. The Yeti Nano has a headphone jack with
+# hardware (zero-latency) monitoring, so we optimise the graph for DROPOUT-FREE
+# capture (a stable, pinned clock quantum) over low software-monitoring latency.
+# Devices are resolved by name match ("yeti"), so no machine serial lands in the repo.
+QUANTUM := "1024"   # frames @48kHz ≈ 21 ms.  ↑ if you hear dropouts;  ↓ for tighter SW monitoring.
+
+# switch to the recording-optimised profile (Yeti default I/O · mic 0 dB · clock pinned)
+audio-record:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    src=$(pactl list sources short | awk 'tolower($0) ~ /yeti/ && /input/ {print $2; exit}')
+    snk=$(pactl list sinks   short | awk 'tolower($0) ~ /yeti/ {print $2; exit}')
+    [ -n "${src:-}" ] && pactl set-default-source "$src"
+    [ -n "${snk:-}" ] && pactl set-default-sink   "$snk"
+    pactl set-source-mute   @DEFAULT_SOURCE@ 0
+    pactl set-source-volume @DEFAULT_SOURCE@ 100%
+    pw-metadata -n settings 0 clock.force-quantum {{QUANTUM}}
+    echo "▶ record mode — Yeti default · mic 0 dB · quantum {{QUANTUM}} pinned. Monitor through the Yeti's own headphone jack (zero latency)."
+
+# restore everyday audio (dynamic clock quantum; the graph repartitions on demand again)
+audio-normal:
+    pw-metadata -n settings 0 clock.force-quantum 0
+    @echo "■ normal mode — dynamic clock restored."
+
+# show current audio state (defaults · pinned quantum · mic level)
+audio-status:
+    @pactl info | grep -E 'Default Source|Default Sink|Default Sample'
+    @pw-metadata -n settings 0 clock.force-quantum 2>/dev/null | tail -1
+    @pactl get-source-volume @DEFAULT_SOURCE@ | head -1
 
 # remove generated renders & frame dumps (keeps source clips + assets)
 clean:

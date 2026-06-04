@@ -19,6 +19,7 @@ metadata. Repoint config at the next song and it all still holds.
 from __future__ import annotations
 
 import asyncio
+import os
 import shutil
 import wave
 from collections import deque
@@ -49,6 +50,52 @@ class TakeNotFound(ValueError):
     """Raised when a take id has no backing directory; routes map this to 404."""
 
 
+# ---- autotune (x42 fat1 LV2) — pure filter construction --------------------
+# Stable plugin id; overridable via config (Settings.autotune_uri) for hosts
+# where the bundle is installed elsewhere.
+_DEFAULT_FAT1_URI = "http://gareus.org/oss/lv2/fat1"
+
+# Pitch-class index == fat1's m00..m11 note-mask port number.
+_PITCH_CLASSES: dict[str, int] = {
+    "C": 0, "C#": 1, "D": 2, "D#": 3, "E": 4, "F": 5,
+    "F#": 6, "G": 7, "G#": 8, "A": 9, "A#": 10, "B": 11,
+}  # fmt: skip
+# Semitone offsets from the root that belong to each scale.
+_SCALE_INTERVALS: dict[str, tuple[int, ...]] = {
+    "chromatic": (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
+    "major": (0, 2, 4, 5, 7, 9, 11),
+    "minor": (0, 2, 3, 5, 7, 8, 10),  # natural minor
+}
+
+
+def notemask(key: str, scale: str) -> tuple[int, ...]:
+    """The 12 fat1 note-mask values (1 = a valid snap target) for ``key``/``scale``.
+
+    Pure. ``m[i]`` is 1 iff pitch-class ``i`` lies on the scale rooted at ``key``.
+    The root is always enabled; ``chromatic`` enables all twelve (so the key is a
+    no-op — the corrector snaps to the nearest semitone, the hard-tune sound).
+    """
+    root = _PITCH_CLASSES[key]
+    intervals = set(_SCALE_INTERVALS[scale])
+    return tuple(1 if ((pc - root) % 12) in intervals else 0 for pc in range(12))
+
+
+def build_fat1_filter(req: TakeMixRequest, *, uri: str = _DEFAULT_FAT1_URI) -> str:
+    """The ``lv2=...`` filter fragment that pitch-corrects the (mono) vocal.
+
+    Pure. The plugin URI's colons are double-escaped because an ffmpeg filtergraph
+    string is unescaped twice (graph parser, then per-filter option parser), so a
+    literal ``:`` inside a value must arrive as ``\\\\:``.
+    """
+    mask = notemask(req.autotune_key, req.autotune_scale)
+    controls = "|".join(
+        [f"corr={req.autotune_amount}", f"tuning={req.autotune_tuning_hz}"]
+        + [f"m{i:02d}={mask[i]}" for i in range(12)]
+    )
+    safe_uri = uri.replace(":", "\\\\:")
+    return f"lv2=p={safe_uri}:c={controls}"
+
+
 # ---- ffmpeg argv builder (pure, importable, unit-tested) -------------------
 def build_mix_argv(
     *,
@@ -60,6 +107,7 @@ def build_mix_argv(
     out_path: Path,
     backing_sr: int,
     backing_duration: float,
+    autotune_uri: str = _DEFAULT_FAT1_URI,
 ) -> list[str]:
     """Build the full ffmpeg argv (exec form) that mixes a vocal take over the
     backing track.
@@ -101,11 +149,19 @@ def build_mix_argv(
         argv += ["-i", str(raw_wav)]
         vidx, bidx = 1, 0
 
-    vocal = (
-        f"[{vidx}:a]aresample={backing_sr},"
-        f"aformat=sample_fmts=fltp:channel_layouts=stereo,"
-        f"volume={req.vocal_gain}"
-    )
+    # Vocal leg: resample to the backing rate, optionally pitch-correct (fat1 is
+    # mono in/out, so it sits BEFORE the stereo upmix), then upmix and gain.
+    vocal_chain = [f"[{vidx}:a]aresample={backing_sr}"]
+    if req.autotune:
+        vocal_chain += [
+            "aformat=channel_layouts=mono",
+            build_fat1_filter(req, uri=autotune_uri),
+        ]
+    vocal_chain += [
+        "aformat=sample_fmts=fltp:channel_layouts=stereo",
+        f"volume={req.vocal_gain}",
+    ]
+    vocal = ",".join(vocal_chain)
     if net_delay >= 0:
         vocal += f",adelay={delay_ms}|{delay_ms},apad[v]"
     else:
@@ -361,6 +417,8 @@ class TakeMixer:
         backing_sr: int,
         backing_duration: float,
         repo: TakeRepository,
+        autotune_uri: str = _DEFAULT_FAT1_URI,
+        lv2_path: str | None = None,
     ) -> TakeMixStatus:
         """Queue a mix for ``take``. If one is already queued/running for this
         take, the current status is returned unchanged (the route turns that
@@ -382,6 +440,8 @@ class TakeMixer:
                 backing_sr=backing_sr,
                 backing_duration=backing_duration,
                 repo=repo,
+                autotune_uri=autotune_uri,
+                lv2_path=lv2_path,
             )
         )
         return status
@@ -397,6 +457,8 @@ class TakeMixer:
         backing_sr: int,
         backing_duration: float,
         repo: TakeRepository,
+        autotune_uri: str = _DEFAULT_FAT1_URI,
+        lv2_path: str | None = None,
     ) -> None:
         kind = req.kind if req.kind is not None else take.kind
         async with self._sem:
@@ -426,7 +488,18 @@ class TakeMixer:
                 out_path=out_path,
                 backing_sr=backing_sr,
                 backing_duration=backing_duration,
+                autotune_uri=autotune_uri,
             )
+            # fat1 resolves on lilv's default path, but prepend the configured
+            # LV2 dir so a non-standard host still finds the bundle. Only bother
+            # building a custom env when autotune is actually engaged.
+            env: dict[str, str] | None = None
+            if req.autotune and lv2_path:
+                existing = os.environ.get("LV2_PATH")
+                env = {
+                    **os.environ,
+                    "LV2_PATH": f"{lv2_path}:{existing}" if existing else lv2_path,
+                }
             # First tail line is the exact argv -> reproducible from status.
             tail.append("$ " + " ".join(argv))
             self._status[take.id] = TakeMixStatus(
@@ -441,6 +514,7 @@ class TakeMixer:
                     *argv,
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.STDOUT,
+                    env=env,
                 )
                 assert proc.stdout is not None
                 async for raw in proc.stdout:

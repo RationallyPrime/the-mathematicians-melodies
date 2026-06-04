@@ -240,6 +240,8 @@ def create_app() -> FastAPI:
             backing_sr=sr,
             backing_duration=dur,
             repo=takes,
+            autotune_uri=cfg.autotune_uri,
+            lv2_path=cfg.lv2_path,
         )
 
     @app.get(

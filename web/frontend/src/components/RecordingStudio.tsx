@@ -8,6 +8,12 @@ import type {
   RenderInfo,
   TakeKind,
   TakeMixRequest,
+  TakeMixRequestAutotuneKey,
+  TakeMixRequestAutotuneScale,
+} from '../api/generated/model'
+import {
+  TakeMixRequestAutotuneKey as AutotuneKey,
+  TakeMixRequestAutotuneScale as AutotuneScale,
 } from '../api/generated/model'
 import {
   getGetTakeMixStatusQueryKey,
@@ -16,6 +22,7 @@ import {
   useCreateTake,
   useGetTake,
   useGetTakeMixStatus,
+  useListTakes,
   useMixTake,
 } from '../api/generated/takes/takes'
 import { RecordingEngine, RecordingEngineError } from '../audio/RecordingEngine'
@@ -88,11 +95,36 @@ export function RecordingStudio({
 
   const [label, setLabel] = useState('')
 
+  // Optional pitch correction (x42 fat1, applied server-side in the mix). Off by
+  // default; chromatic snaps to the nearest semitone and ignores the key.
+  const [autotune, setAutotune] = useState(false)
+  const [autoKey, setAutoKey] = useState<TakeMixRequestAutotuneKey>(AutotuneKey.A)
+  const [autoScale, setAutoScale] = useState<TakeMixRequestAutotuneScale>(AutotuneScale.chromatic)
+  const [autoAmount, setAutoAmount] = useState(1.0)
+
   // The take currently being created/mixed/previewed.
   const [activeTakeId, setActiveTakeId] = useState<string | null>(null)
+  // One-shot guard so the mount-time rehydration can't fight the user once they
+  // start recording (which sets its own activeTakeId).
+  const hydratedRef = useRef(false)
 
   const createTake = useCreateTake()
   const mixTake = useMixTake()
+
+  // Reconnect to the most recent take on mount. activeTakeId is in-memory React
+  // state with no persistence, so a page reload (e.g. a hard-refresh to pick up
+  // a new build) used to leave the Studio bound to nothing — a finished mix then
+  // rendered no progress, no player, no download. Hydrating from the newest take
+  // makes the Studio re-surface the last result after any reload.
+  const takesList = useListTakes()
+  useEffect(() => {
+    if (hydratedRef.current || activeTakeId !== null) return
+    const newest = takesList.data?.[0]
+    if (newest) {
+      hydratedRef.current = true
+      setActiveTakeId(newest.id)
+    }
+  }, [takesList.data, activeTakeId])
 
   // Lazily create the engine (constructor opens an AudioContext, which the
   // autoplay policy keeps suspended until arm()'s resume — cheap to hold).
@@ -229,6 +261,10 @@ export function RecordingStudio({
                   backing_gain: backingGain,
                   vocal_gain: 1.0,
                   latency_ms: effectiveLatencyMs,
+                  autotune,
+                  autotune_key: autoKey,
+                  autotune_scale: autoScale,
+                  autotune_amount: autoAmount,
                 } as TakeMixRequest,
               },
               {
@@ -274,15 +310,20 @@ export function RecordingStudio({
     },
   })
 
-  // Once the mix is done, fetch the take to get the computed mix_url.
   const status = mixStatus.data
-  const mixDone = status?.state === 'done'
+  // Fetch the durable take whenever one is active — NOT gated on the ephemeral
+  // job status. The mixer's per-job state lives only in memory, so after a reload
+  // (or a backend restart) it reports 'idle' even though the take is persisted as
+  // 'done'. The take's own status/mix_url is the durable source of truth.
   const activeTake = useGetTake(activeTakeId ?? '', {
-    query: { enabled: activeTakeId !== null && mixDone },
+    query: { enabled: activeTakeId !== null },
   })
+  // Ready = the persisted take says done, OR the live job just finished.
+  const mixReady = activeTake.data?.status === 'done' || status?.state === 'done'
   const mixUrl =
-    activeTake.data?.mix_url ??
-    (activeTakeId !== null && mixDone ? mediaUrl(`/api/media/take/${activeTakeId}/mix`) : null)
+    mixReady && activeTakeId !== null
+      ? (activeTake.data?.mix_url ?? mediaUrl(`/api/media/take/${activeTakeId}/mix`))
+      : null
   // The finished mix is video/mp4 for kind=video, audio/mp4 for kind=audio.
   const mixIsVideo =
     activeTake.data?.kind === 'video' || (activeTake.data == null && kind === 'video')
@@ -464,6 +505,70 @@ export function RecordingStudio({
           </Button>
         </div>
 
+        <div className="flex flex-col gap-2">
+          <label className="flex items-center gap-2 text-xs text-muted">
+            <input
+              type="checkbox"
+              className="accent-primary"
+              checked={autotune}
+              onChange={(e) => setAutotune(e.target.checked)}
+            />
+            autotune <span className="text-faint">(pitch-correct the vocal)</span>
+          </label>
+
+          {autotune && (
+            <div className="flex flex-col gap-2 rounded-lg border border-line bg-surface-3 p-3">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-muted">
+                <label className="flex items-center gap-1.5">
+                  key
+                  <select
+                    className="rounded border border-line bg-surface-2 px-2 py-1 text-on-surface focus:border-primary focus:outline-none disabled:opacity-40"
+                    value={autoKey}
+                    disabled={autoScale === AutotuneScale.chromatic}
+                    onChange={(e) => setAutoKey(e.target.value as TakeMixRequestAutotuneKey)}
+                  >
+                    {Object.values(AutotuneKey).map((k) => (
+                      <option key={k} value={k}>
+                        {k}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <label className="flex items-center gap-1.5">
+                  scale
+                  <select
+                    className="rounded border border-line bg-surface-2 px-2 py-1 text-on-surface focus:border-primary focus:outline-none"
+                    value={autoScale}
+                    onChange={(e) => setAutoScale(e.target.value as TakeMixRequestAutotuneScale)}
+                  >
+                    {Object.values(AutotuneScale).map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <Slider
+                label="strength"
+                valueLabel={
+                  autoAmount >= 0.99 ? 'hard' : autoAmount <= 0.01 ? 'off' : autoAmount.toFixed(2)
+                }
+                min={0}
+                max={1}
+                step={0.05}
+                value={autoAmount}
+                onChange={(e) => setAutoAmount(Number(e.target.value))}
+              />
+              {autoScale === AutotuneScale.chromatic && (
+                <span className="text-faint text-xs">
+                  chromatic snaps to the nearest semitone — key is ignored
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+
         <label className="flex items-center gap-2 text-xs text-muted">
           label
           <input
@@ -503,7 +608,7 @@ export function RecordingStudio({
         </div>
       )}
 
-      {mixDone && mixUrl && (
+      {mixReady && mixUrl && (
         <div className="flex flex-col gap-3 rounded-2xl border border-line bg-surface-2 p-4 shadow-folio">
           {mixIsVideo ? (
             // biome-ignore lint/a11y/useMediaCaption: this is a karaoke take preview

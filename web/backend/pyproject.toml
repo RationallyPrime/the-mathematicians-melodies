@@ -16,6 +16,12 @@ dependencies = [
     "python-multipart>=0.0.9",
 ]
 
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "hypothesis>=6.122",
+]
+
 [tool.uv]
 package = false
 
@@ -25,3 +31,6 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

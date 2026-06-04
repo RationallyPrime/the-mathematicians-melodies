@@ -99,6 +99,14 @@ class Settings(BaseSettings):
     reload: bool = True
     log_json: bool = False
 
+    # ---- autotune (x42 fat1 LV2, applied per-take in the mix) -----------
+    # Host/plugin facts, NOT song constants: the URI is the stable plugin id and
+    # lv2_path is where the bundle lives. Override via ABRA_AUTOTUNE_URI /
+    # ABRA_LV2_PATH if the plugin moves. fat1 resolves on lilv's default path,
+    # so lv2_path is belt-and-suspenders for non-standard hosts.
+    autotune_uri: str = "http://gareus.org/oss/lv2/fat1"
+    lv2_path: str = "/usr/lib/lv2"
+
     # ---- derived paths -------------------------------------------------
     @property
     def cut_path(self) -> Path:

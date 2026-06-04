@@ -118,6 +118,12 @@ DeliverableKind = Literal["video", "audio"]
 # Mirrors RenderStatus.state so a single poll hook can drive both pipelines.
 MixState = Literal["idle", "queued", "running", "done", "failed"]
 
+# ---- autotune (optional per-take pitch correction via x42 fat1) -----------
+# The 12 pitch classes (index == fat1's m00..m11 note-mask ports). The chosen
+# key + scale collapse to which of these the corrector is allowed to snap to.
+NoteName = Literal["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+ScaleName = Literal["chromatic", "major", "minor"]
+
 
 class TakeCreate(BaseModel):
     """JSON `meta` part of the multipart take upload."""
@@ -183,6 +189,18 @@ class TakeMixRequest(BaseModel):
     latency_ms: float | None = None
     backing_gain: float = Field(default=0.85, ge=0.0, le=2.0)
     vocal_gain: float = Field(default=1.0, ge=0.0, le=2.0)
+
+    # Optional pitch correction on the vocal leg. Off by default ⇒ the mix is
+    # byte-for-byte what it was before autotune existed. ``chromatic`` snaps to
+    # the nearest semitone (the classic hard-tune sound) and ignores the key;
+    # ``major``/``minor`` constrain snapping to that key's scale tones.
+    autotune: bool = False
+    autotune_key: NoteName = "A"
+    autotune_scale: ScaleName = "chromatic"
+    # fat1 'corr': 1.0 = full hard snap, 0.0 = bypass. The expressive middle.
+    autotune_amount: float = Field(default=1.0, ge=0.0, le=1.0)
+    # fat1 'tuning': reference pitch in Hz (concert A).
+    autotune_tuning_hz: float = Field(default=440.0, ge=400.0, le=480.0)
 
 
 class TakeMixStatus(BaseModel):
