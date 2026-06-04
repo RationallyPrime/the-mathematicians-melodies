@@ -70,7 +70,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 Style: K,DejaVu Sans,{BASE_FS},&H0000D7FF,{WHITE},&H00101010,&H64000000,-1,0,0,0,100,100,0,0,1,3,1,5,40,40,40,1
 
 [Events]
-Format: Layer, Start, End, Style, Name, MarginL, MarginR, Effect, Text
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 """
 
 DARK = "&H00101010"
