@@ -35,5 +35,10 @@ web/frontend/dist/
 web/frontend/src/api/generated/   # orval output (regenerate with `just gen`)
 web/frontend/src/api/zod/
 
-# --- Session state (not part of the project) ---
+# --- Recorded vocal takes + their mixes (user uploads, purge via `just takes-clean`) ---
+web/backend/takes/
+takes/
+
+# --- Session state / assistant scratch (not part of the project) ---
 .remember/
+memory/

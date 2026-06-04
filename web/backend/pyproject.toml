@@ -13,6 +13,7 @@ dependencies = [
     "pydantic>=2.10",
     "pydantic-settings>=2.7",
     "structlog>=24.4",
+    "python-multipart>=0.0.9",
 ]
 
 [tool.uv]

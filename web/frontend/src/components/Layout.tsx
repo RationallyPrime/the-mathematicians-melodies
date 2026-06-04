@@ -17,6 +17,9 @@ export function Layout() {
           <Link to="/editor" className="navlink" activeProps={{ className: 'navlink active' }}>
             Editor
           </Link>
+          <Link to="/studio" className="navlink" activeProps={{ className: 'navlink active' }}>
+            Sing
+          </Link>
         </nav>
         <span className="sub">the mathematician&rsquo;s melodies</span>
       </header>

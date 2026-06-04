@@ -15,7 +15,9 @@ export class ApiError extends Error {
 
 export const customFetch = async <T>(url: string, options: RequestInit = {}): Promise<T> => {
   const headers = new Headers(options.headers)
-  if (options.body && !headers.has('Content-Type')) {
+  // FormData must NOT carry an explicit Content-Type: the browser sets it
+  // along with the multipart boundary. Only force JSON for non-FormData bodies.
+  if (options.body && !(options.body instanceof FormData) && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json')
   }
   const res = await fetch(`${BASE}${url}`, { ...options, headers })
