@@ -105,7 +105,7 @@ just web                     # Vite/bun dev on :4321  (proxies /api)
 
 - [ ] Narrative re-cut of the pre/post-vocal sections + color grade across clips
 - [x] **Frontend** — a bun/FastAPI web player + cut editor (see [`web/`](web/README.md))
-- [ ] **Vocal-overlay recording** — capture take-home vocal tracks over the karaoke
+- [x] **Vocal-overlay recording** — browser recording studio, persisted takes and backing-track mixing (requires HTTPS or localhost).
 - [ ] Title card + end credits
 - [ ] Tighter per-syllable karaoke timing
 
